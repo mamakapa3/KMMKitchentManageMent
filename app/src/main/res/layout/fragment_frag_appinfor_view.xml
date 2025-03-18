@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:context=".fragmentSub.frag_appinforView">
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/angle_small_left"
+            app:tint="#000000"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:text="Thông tin ứng dụng"
+            android:textColor="#BD8321"
+            android:textSize="35dp"
+            android:textStyle="bold|italic" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/ic_logo" />
+
+            <TextView
+                android:id="@+id/txtGioiThieu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="15dp"
+                android:textSize="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Thành viên tham gia:"
+                android:textColor="#5C4033"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="20dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thiết kế giao diện:"
+                android:textColor="#212121"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="40dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="- Đồng Văn Thịnh"
+                android:textColor="#3F51B5"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="50dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="- Lê Ngọc Thắng"
+                android:textColor="#3F51B5"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="50dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lập trình ứng dụng:"
+                android:textColor="#212121"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="40dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="- Nguyễn Hoàng Sơn"
+                android:textColor="#3F51B5"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="50dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quản lý dữ liệu:"
+                android:textColor="#212121"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="40dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="- Nguyễn Trọng Ninh"
+                android:textColor="#3F51B5"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="50dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kiểm tra chương trình:"
+                android:textColor="#212121"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="40dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="- Lê Ngọc Thắng"
+                android:textColor="#3F51B5"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_marginLeft="50dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

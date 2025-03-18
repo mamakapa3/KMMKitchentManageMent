@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".fragment_themND.ThemTacGia">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnBackAddTG"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/angle_small_left"
+                app:tint="#000000"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/txtTGTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="40dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold|italic"
+                android:textColor="#BD8321"
+                android:layout_gravity="center_vertical"
+                android:text="Thêm tác giả" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txttgadd1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:textSize="25dp"
+            android:text="Họ Tên" />
+
+        <EditText
+            android:id="@+id/editTextTGName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text=""
+            android:textSize="25dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+        <TextView
+            android:id="@+id/txttgadd2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="25dp"
+            android:text="Số Điện Thoại: " />
+
+        <EditText
+            android:id="@+id/editTextTGPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone"
+            android:text=""
+            android:textSize="25dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+        <TextView
+            android:id="@+id/txttgadd3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="25dp"
+            android:text="Email: " />
+
+        <EditText
+            android:id="@+id/editTextTGEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:text=""
+            android:textSize="25dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/btnAddTG"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:backgroundTint="#BD8321"
+            android:text="Thêm" />
+    </LinearLayout>
+</FrameLayout>

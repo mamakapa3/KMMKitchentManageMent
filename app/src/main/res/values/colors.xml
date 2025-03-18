@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="background_gradient_start">#000000</color>
+    <color name="background_gradient_end">#DDDDDD</color>
+    <color name="fastlane_background">#0096a6</color>
+    <color name="search_opaque">#ffaa3f</color>
+    <color name="selected_background">#ffaa3f</color>
+    <color name="default_background">#3d3d3d</color>
+    <color name="primary_color">#d6d7d7</color>
+    <color name="m3_sys_color_light_primary">#8a523a</color>
+    <color name="m3_sys_color_light_primary_container">#d6d7d7</color>
+    <color name="tab_text_color">#80FFFFFF</color>
+    <color name="tab_icon_tint">#80FFFFFF</color>
+    <color name="tab_ripple_color">#BD8321</color>
 </resources>

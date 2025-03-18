@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp"
+        android:background="@drawable/rounded_edittext">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/holo_blue_light">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="THAY ĐỔI THÔNG TIN"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:paddingLeft="20dp"
+                android:textColor="#FFFFFF"/>
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="20dp"
+                app:tint="#FFFFFF"
+                app:srcCompat="@drawable/pencil" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/dialog_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="null"
+                android:textSize="16sp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/username_or_email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Điền thông tin vào"
+                android:padding="16dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/rounded_edittext"
+                android:maxLength="50"
+                android:layout_marginBottom="10dp"/>
+
+
+            <TextView
+                android:id="@+id/errorLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thông tin không hợp lệ!"
+                android:textColor="#FF0000"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingHorizontal="30dp">
+
+                <Button
+                    android:id="@+id/dialog_button_sent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Gửi"
+                    tools:ignore="HardcodedText" />
+
+                <Button
+                    android:id="@+id/dialog_button_skip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="Hủy"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
