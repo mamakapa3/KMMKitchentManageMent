@@ -1,131 +1,107 @@
-package com.example.kmmkitchentmanagement.adapter;
+package com.example.kmmkitchentmanagement.adapter
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.kmmkitchentmanagement.Model.LuanVan
+import com.example.kmmkitchentmanagement.R
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+class LuanVanAdapter(
+    private val context: Context,
+    private var list: List<LuanVan>
+) : BaseAdapter(), Filterable {
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.kmmkitchentmanagement.Model.LuanVan;
-import com.example.kmmkitchentmanagement.Model.TacGia;
-import com.example.kmmkitchentmanagement.R;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+    private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
+    private var reflectList: List<LuanVan> = ArrayList(list)
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-public class LuanVanAdapter extends BaseAdapter implements Filterable {
-    FirebaseStorage firebaseStorage;
-    Context context ;
-
-    List<LuanVan> list,reflectList;
-    TacGia tacGia;
-
-    public LuanVanAdapter(Context context, List<LuanVan> list ) {
-        firebaseStorage=FirebaseStorage.getInstance();
-        this.context =  context;
-        this.list = list;
-        this.reflectList=new ArrayList<>(list);
+    fun setReflectList(reflectList: List<LuanVan>) {
+        this.reflectList = reflectList
     }
 
-    public void setReflectList(List<LuanVan> reflectList) {
-        this.reflectList = reflectList;
+    fun getList(): List<LuanVan> {
+        return list
     }
 
-    public List<LuanVan> getList() {
-        return list;
+    fun getReflectList(): List<LuanVan> {
+        return reflectList
     }
 
-    public List<LuanVan> getReflectList() {
-        return reflectList;
+    override fun getCount(): Int {
+        return list.size
     }
 
-    @Override
-    public int getCount() {
-        return list.size();
+    override fun getItem(position: Int): Any {
+        return list[position]
     }
 
-    @Override
-    public Object getItem(int i) {
-        return list.get(i);
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-    Filter filter= new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            ArrayList<LuanVan> result = new ArrayList<LuanVan>();
-            if(charSequence==null||charSequence.length()==0) {
-                result.addAll(reflectList);
-            }else{
-                reflectList.forEach(luanVan -> {
-                    if(luanVan.getTitle().trim().toLowerCase().contains(charSequence.toString().trim().toLowerCase())) {
-                        result.add(luanVan);
+    private val filter: Filter = object : Filter() {
+        override fun performFiltering(charSequence: CharSequence?): FilterResults {
+            val result = mutableListOf<LuanVan>()
+            if (charSequence.isNullOrEmpty()) {
+                result.addAll(reflectList)
+            } else {
+                reflectList.forEach { luanVan ->
+                    if (luanVan.title.trim().toLowerCase().contains(charSequence.toString().trim().toLowerCase())) {
+                        result.add(luanVan)
                     }
-                } );
+                }
             }
-            FilterResults results=new FilterResults();
-            results.values=result;
-            return results;
-        }
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            list.clear();
-            list.addAll((Collection<? extends LuanVan>) filterResults.values);
-            notifyDataSetChanged();
+            return FilterResults().apply {
+                values = result
+            }
         }
 
-    };
-    @Override
-    public Filter getFilter() {
-        return filter;
+        override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults?) {
+            list = filterResults?.values as List<LuanVan>
+            notifyDataSetChanged()
+        }
     }
-    
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
-        view = LayoutInflater.from(context).inflate(R.layout.listview_noi_dung_luan_van, null);
 
-        TextView textLVtieude = view.findViewById(R.id.textLVtieude);
-        TextView txtTacGiaLv = view.findViewById(R.id.txtTacGiaLV);
-        TextView txtChuDeLV = view.findViewById(R.id.txtChuDeLV);
-        TextView txtTinhTrangLV =  view.findViewById(R.id.txtTinhTrangLV);
-        ImageView imageNDLV =view.findViewById(R.id.imageNDLV);
+    override fun getFilter(): Filter {
+        return filter
+    }
 
-        LuanVan luanVan =list.get(position);
-        textLVtieude.setText(luanVan.getTitle());
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view = LayoutInflater.from(context).inflate(R.layout.listview_noi_dung_luan_van, parent, false)
 
-        txtTacGiaLv.setText(luanVan.getTacGias());
-        txtChuDeLV.setText(luanVan.getTitle());
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        if (luanVan.isPublished() == true) {
-            txtTinhTrangLV.setText("Đã xuất bản");
-        } else {
-            txtTinhTrangLV.setText("Chưa xuất bản");
-        }
-        StorageReference storageReference= firebaseStorage.getReference("/luanvan/image/"+luanVan.getId()+".jpg");
+        val textLVtieude: TextView = view.findViewById(R.id.textLVtieude)
+        val txtTacGiaLv: TextView = view.findViewById(R.id.txtTacGiaLV)
+        val txtChuDeLV: TextView = view.findViewById(R.id.txtChuDeLV)
+        val txtTinhTrangLV: TextView = view.findViewById(R.id.txtTinhTrangLV)
+        val imageNDLV: ImageView = view.findViewById(R.id.imageNDLV)
+
+        val luanVan = list[position]
+        textLVtieude.text = luanVan.title
+        txtTacGiaLv.text = luanVan.tacGias
+        txtChuDeLV.text = luanVan.title
+        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+
+        txtTinhTrangLV.text = if (luanVan.isPublished) "Đã xuất bản" else "Chưa xuất bản"
+
+        val storageReference: StorageReference = firebaseStorage.getReference("/luanvan/image/${luanVan.id}.jpg")
         Glide.with(context)
-                .load(storageReference)
-                .error(R.drawable.fail_image)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(imageNDLV);
-        return view;
+            .load(storageReference)
+            .error(R.drawable.fail_image)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .into(imageNDLV)
+
+        return view
     }
 }

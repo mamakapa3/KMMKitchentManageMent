@@ -10,7 +10,7 @@
     android:foregroundTint="#FFFFFF"
     android:orientation="horizontal"
     android:paddingBottom="10dp"
-    app:layoutDescription="@xml/listview_tacgia_scene">
+    >
 
 
     <LinearLayout

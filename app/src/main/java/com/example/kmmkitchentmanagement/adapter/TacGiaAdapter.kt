@@ -1,94 +1,83 @@
-package com.example.kmmkitchentmanagement.adapter;
+package com.example.kmmkitchentmanagement.adapter
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.TextView
+import com.example.kmmkitchentmanagement.Model.TacGia
+import com.example.kmmkitchentmanagement.R
 
-import com.example.kmmkitchentmanagement.Model.TacGia;
-import com.example.kmmkitchentmanagement.R;
+class TacGiaAdapter(
+    private val context: Context,
+    private var tacGiaList: MutableList<TacGia>
+) : BaseAdapter(), Filterable {
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+    private var reflectList: MutableList<TacGia> = mutableListOf()
 
-public class TacGiaAdapter extends BaseAdapter implements Filterable {
-    Context context;
-    List<TacGia> tacGiaList,reflectList;
-    Filter filter=new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            List<TacGia> resultList=new ArrayList<>();
-            if(charSequence==null||charSequence.length()==0) {
-                resultList.addAll(reflectList);
-            }else{
-                reflectList.forEach((tacgia)->{
-                    if(tacgia.toString().contains(charSequence.toString().trim().toLowerCase())){
-                        resultList.add(tacgia);
+    private val filter: Filter = object : Filter() {
+        override fun performFiltering(charSequence: CharSequence?): FilterResults {
+            val resultList = mutableListOf<TacGia>()
+            if (charSequence.isNullOrEmpty()) {
+                resultList.addAll(reflectList)
+            } else {
+                reflectList.forEach { tacGia ->
+                    if (tacGia.toString().contains(charSequence.toString().trim(), ignoreCase = true)) {
+                        resultList.add(tacGia)
                     }
-                });
+                }
             }
-            FilterResults results=new FilterResults();
-            results.values=resultList;
-            return results;
-        }
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            tacGiaList.clear();
-            tacGiaList.addAll((Collection<? extends TacGia>) filterResults.values);
-            notifyDataSetChanged();
+            return FilterResults().apply { values = resultList }
         }
 
-    };
-
-    public TacGiaAdapter(Context context, List<TacGia> tacGiaList) {
-        this.context = context;
-        this.tacGiaList = tacGiaList;
-        reflectList=new ArrayList<>();
+        override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults?) {
+            tacGiaList.clear()
+            filterResults?.values?.let { tacGiaList.addAll(it as List<TacGia>) }
+            notifyDataSetChanged()
+        }
     }
 
-    public List<TacGia> getReflectList() {
-        return reflectList;
+    fun getReflectList(): List<TacGia> = reflectList
+
+    fun setReflectList(reflectList: List<TacGia>) {
+        this.reflectList = reflectList.toMutableList()
     }
 
-    public void setReflectList(List<TacGia> reflectList) {
-        this.reflectList = reflectList;
+    override fun getCount(): Int = tacGiaList.size
+
+    override fun getItem(position: Int): Any = tacGiaList[position]
+
+    override fun getItemId(position: Int): Long = position.toLong()
+
+    override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
+        var holder: ViewHolder
+
+        val convertView = view ?: LayoutInflater.from(context).inflate(R.layout.listview_tacgia, parent, false).apply {
+            holder = ViewHolder().also {
+                it.txtTacGia = findViewById(R.id.txtTacGia)
+                it.txtEmail = findViewById(R.id.txtEmail)
+                it.txtSDT = findViewById(R.id.txtSDT)
+            }
+            tag = holder
+        }
+
+        holder = convertView.tag as ViewHolder
+        val tacGia = tacGiaList[position]
+        holder.txtTacGia.text = tacGia.name
+        holder.txtEmail.text = tacGia.emailAddress
+        holder.txtSDT.text = tacGia.phoneNumber
+
+        return convertView
     }
 
-    @Override
-    public int getCount() {
-        return tacGiaList.size();
-    }
+    override fun getFilter(): Filter = filter
 
-    @Override
-    public Object getItem(int i) {
-        return tacGiaList.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        view =LayoutInflater.from(context).inflate(R.layout.listview_tacgia,null);
-        TextView txtTacGia=view.findViewById(R.id.txtTacGia);
-        TextView txtEmail=view.findViewById(R.id.txtEmail);
-        TextView txtSDT=view.findViewById(R.id.txtSDT);
-        TacGia tacGia=tacGiaList.get(i);
-        txtTacGia.setText(tacGia.getName());
-        txtEmail.setText(tacGia.getEmailAddress());
-        txtSDT.setText(tacGia.getPhoneNumber());
-        return view;
-    }
-
-    @Override
-    public Filter getFilter() {
-        return filter;
+    private class ViewHolder {
+        lateinit var txtTacGia: TextView
+        lateinit var txtEmail: TextView
+        lateinit var txtSDT: TextView
     }
 }

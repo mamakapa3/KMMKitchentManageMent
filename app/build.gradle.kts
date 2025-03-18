@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     kotlin("plugin.serialization") version "2.0.21"
+
 }
 
 android {
@@ -41,12 +42,14 @@ android {
 }
 
 dependencies {
+    implementation(libs.glide)
     implementation(libs.firebase.auth)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.swiperefreshlayout)
     val nav_version = "2.8.9"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

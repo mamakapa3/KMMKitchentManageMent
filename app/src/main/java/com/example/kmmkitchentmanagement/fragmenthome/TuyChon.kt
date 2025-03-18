@@ -1,187 +1,165 @@
-package com.example.kmmkitchentmanagement.fragmenthome;
+package com.example.kmmkitchentmanagement.fragmenthome
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.kmmkitchentmanagement.Data.NetworkUtil
+import com.example.kmmkitchentmanagement.Model.NguoiDung
+import com.example.kmmkitchentmanagement.R
+import com.example.kmmkitchentmanagement.customdialog.ErrorDialog
+import com.example.kmmkitchentmanagement.customdialog.SetPassword
+import com.example.kmmkitchentmanagement.fragment_setting.Infomation
+import com.example.kmmkitchentmanagement.interfaceFile.LogoutListener
+import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+class TuyChon : Fragment() {
 
-import com.example.kmmkitchentmanagement.Data.NetworkUtil;
-import com.example.kmmkitchentmanagement.Model.NguoiDung;
-import com.example.kmmkitchentmanagement.R;
-import com.example.kmmkitchentmanagement.customdialog.ErrorDialog;
-import com.example.kmmkitchentmanagement.customdialog.SetPassword;
-import com.example.kmmkitchentmanagement.fragment_setting.Infomation;
-import com.example.kmmkitchentmanagement.interfaceFile.LogoutListener;
-import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel;
+    private lateinit var profileLayout: LinearLayout
+    private lateinit var accountOptions: LinearLayout
+    private lateinit var profileImage: ImageView
+    private lateinit var profileImageArrow: ImageView
+    private lateinit var mExit: Button
+    private var isClicked = false
+    private lateinit var profileName: TextView
+    private lateinit var ttcn: TextView
+    private lateinit var tdmk: TextView
+    private lateinit var logApp: TextView
 
-public class TuyChon extends Fragment {
-    private LinearLayout profileLayout;
-    private LinearLayout accountOptions;
-    private ImageView profileImage;
-    private ImageView profileImageArrow;
-    private Button mExit;
-    private boolean isClicked = false;
-    private TextView profileName;
-    private TextView ttcn, tdmk, logApp;
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
 
-    private Handler handler;
-    private Runnable runnable;
+    private var logoutListener: LogoutListener? = null
+    private lateinit var user: NguoiDung
 
-    private LogoutListener logoutListener;
-    private NguoiDung user;
+    private lateinit var infoActivityResultLauncher: ActivityResultLauncher<Intent>
 
-    private ActivityResultLauncher<Intent> infoActivityResultLauncher;
+    private lateinit var userViewModel: UserViewModel
 
-    public TuyChon() {
-        // Required empty public constructor
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    private UserViewModel userViewModel;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        userViewModel = ViewModelProvider(requireActivity()).get(UserViewModel::class.java)
 
         infoActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent intent = getActivity().getIntent();
-                        String userEmail = intent.getStringExtra("user_email");
-                        userViewModel.fetchUserData(userEmail);
-                    }
-                });
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        getUserData();
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_tuy_chon, container, false);
-
-        AddView(view);
-
-        return view;
-    }
-
-    public void AddView(View view){
-        profileLayout = view.findViewById(R.id.profile_layout);
-        accountOptions = view.findViewById(R.id.AccoutOptions);
-        profileImage = view.findViewById(R.id.profile_image);
-        profileImageArrow = view.findViewById(R.id.image_profile_arrow);
-        mExit = view.findViewById(R.id.logout);
-        profileName = view.findViewById(R.id.profile_name);
-        profileName.setText("Không xác định");
-        ttcn = view.findViewById(R.id.ttcn);
-        tdmk = view.findViewById(R.id.tdmk);
-        logApp = view.findViewById(R.id.logLoading);
-
-        profileLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onAccountClick(v);
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = requireActivity().intent
+                val userEmail = intent.getStringExtra("user_email")
+                userViewModel.fetchUserData(userEmail)
             }
-        });
-
-        ttcn.setOnClickListener(v -> {
-            openInfoFragment();
-        });
-
-        tdmk.setOnClickListener(v -> {
-            if (!NetworkUtil.isWifiConnected(this.getContext())) {
-                showErrorConnectDialog();
-            }else{
-                SetPassword setPassword = new SetPassword(user.getEmail());
-                setPassword.show(getParentFragmentManager(), "setPassword");
-            }
-        });
-
-        mExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                getActivity().finish();
-                onLogoutButtonClicked();
-            }
-        });
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        if (context instanceof LogoutListener) {
-            logoutListener = (LogoutListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement LogoutListener");
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        logoutListener = null;
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        getUserData()
+        val view = inflater.inflate(R.layout.fragment_tuy_chon, container, false)
+        addView(view)
+        return view
     }
 
-    private void getUserData() {
-        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            this.user = user;
-            if (user != null) {
-                profileName.setText(user.getName());
-                logApp.setVisibility(View.GONE);
+    private fun addView(view: View) {
+        profileLayout = view.findViewById(R.id.profile_layout)
+        accountOptions = view.findViewById(R.id.AccoutOptions)
+        profileImage = view.findViewById(R.id.profile_image)
+        profileImageArrow = view.findViewById(R.id.image_profile_arrow)
+        mExit = view.findViewById(R.id.logout)
+        profileName = view.findViewById(R.id.profile_name)
+        profileName.text = "Không xác định"
+        ttcn = view.findViewById(R.id.ttcn)
+        tdmk = view.findViewById(R.id.tdmk)
+        logApp = view.findViewById(R.id.logLoading)
+
+        profileLayout.setOnClickListener {
+            onAccountClick(it)
+        }
+
+        ttcn.setOnClickListener {
+            openInfoFragment()
+        }
+
+        tdmk.setOnClickListener {
+            if (!context?.let { it1 -> NetworkUtil.isWifiConnected(it1) }!!) {
+                showErrorConnectDialog()
             } else {
-                profileName.setText("Không xác định");
-                logApp.setVisibility(View.VISIBLE);
+                val setPassword = SetPassword(user.email)
+                setPassword.show(parentFragmentManager, "setPassword")
             }
-        });
+        }
+
+        mExit.setOnClickListener {
+            onLogoutButtonClicked()
+        }
     }
 
-
-    public void onAccountClick(View view) {
-        if (!isClicked) {
-            accountOptions.setVisibility(View.VISIBLE);
-            profileImageArrow.setImageResource(R.drawable.up_arrow);
-            isClicked = true;
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is LogoutListener) {
+            logoutListener = context
         } else {
-            accountOptions.setVisibility(View.GONE);
-            profileImageArrow.setImageResource(R.drawable.arrow_down_sign_to_navigate);
-            isClicked = false;
+            throw RuntimeException("$context must implement LogoutListener")
         }
     }
 
-    public void openInfoFragment(){
-        Intent intent = new Intent(requireActivity(), Infomation.class);
-        intent.putExtra("user_email", user.getEmail()); // Truyền email qua Intent
-        infoActivityResultLauncher.launch(intent);
+    override fun onDetach() {
+        super.onDetach()
+        logoutListener = null
     }
 
-    // When the button is clicked
-    public void onLogoutButtonClicked() {
-        if (logoutListener != null) {
-            logoutListener.onLogout();
+    private fun getUserData() {
+        userViewModel.getUser().observe(viewLifecycleOwner) { user ->
+            this.user = user
+            if (user != null) {
+                profileName.text = user.name
+                logApp.visibility = View.GONE
+            } else {
+                profileName.text = "Không xác định"
+                logApp.visibility = View.VISIBLE
+            }
         }
     }
 
-    private void showErrorConnectDialog() {
-        String log = "Không có kết nối mạng. Vui lòng kiểm tra lại kết nối rồi thử lại sau!";
-        ErrorDialog errorDialog = new ErrorDialog(log, false);
-        errorDialog.show(getParentFragmentManager(), "errorConnectDialog");
+    private fun onAccountClick(view: View) {
+        if (!isClicked) {
+            accountOptions.visibility = View.VISIBLE
+            profileImageArrow.setImageResource(R.drawable.up_arrow)
+            isClicked = true
+        } else {
+            accountOptions.visibility = View.GONE
+            profileImageArrow.setImageResource(R.drawable.arrow_down_sign_to_navigate)
+            isClicked = false
+        }
+    }
+
+    private fun openInfoFragment() {
+        val intent = Intent(requireActivity(), Infomation::class.java)
+        intent.putExtra("user_email", user.email)
+        infoActivityResultLauncher.launch(intent)
+    }
+
+    private fun onLogoutButtonClicked() {
+        logoutListener?.onLogout()
+    }
+
+    private fun showErrorConnectDialog() {
+        val log = "Không có kết nối mạng. Vui lòng kiểm tra lại kết nối rồi thử lại sau!"
+        val errorDialog = ErrorDialog(log, false)
+        errorDialog.show(parentFragmentManager, "errorConnectDialog")
     }
 }

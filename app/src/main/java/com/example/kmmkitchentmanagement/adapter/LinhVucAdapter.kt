@@ -1,107 +1,89 @@
-package com.example.kmmkitchentmanagement.adapter;
+package com.example.kmmkitchentmanagement.adapter
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Button
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.TextView
+import com.example.kmmkitchentmanagement.R
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.firestore.AggregateQuerySnapshot
+import com.google.firebase.firestore.AggregateSource
+import com.google.firebase.firestore.FirebaseFirestore
 
-import com.example.kmmkitchentmanagement.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.AggregateQuerySnapshot;
-import com.google.firebase.firestore.AggregateSource;
-import com.google.firebase.firestore.FirebaseFirestore;
+class LinhVucAdapter(
+    private val context: Context,
+    private var listchude: List<String>
+) : BaseAdapter(), Filterable {
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var reflectList: List<String> = ArrayList()
 
-public class LinhVucAdapter extends BaseAdapter implements Filterable {
-    FirebaseFirestore firestore;
-    Context context;
-    List<String> listchude,reflectList;
-    Filter filter= new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            List<String> resultList=new ArrayList<>();
-            if(charSequence==null||charSequence.length()==0){
-                resultList.addAll(reflectList);
-            }else {
-                reflectList.forEach((chude)->{
-                    if(chude.trim().toLowerCase().contains(charSequence)){
-                        resultList.add(chude);
+    private val filter = object : Filter() {
+        override fun performFiltering(charSequence: CharSequence?): FilterResults {
+            val resultList = mutableListOf<String>()
+            if (charSequence.isNullOrEmpty()) {
+                resultList.addAll(reflectList)
+            } else {
+                reflectList.forEach { chude ->
+                    if (chude.trim().toLowerCase().contains(charSequence.toString())) {
+                        resultList.add(chude)
                     }
-                });
+                }
             }
-            FilterResults results=new FilterResults();
-            results.values=resultList;
-            return results;
+            return FilterResults().apply {
+                values = resultList
+            }
         }
 
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-
-            listchude.clear();
-            listchude.addAll((Collection<? extends String>) filterResults.values);
-            notifyDataSetChanged();
+        override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults?) {
+            listchude = filterResults?.values as List<String>
+            notifyDataSetChanged()
         }
-    };
-
-    public LinhVucAdapter(Context context, List<String> listchude) {
-        firestore=FirebaseFirestore.getInstance();
-        this.context = context;
-        this.listchude = listchude;
-        reflectList=new ArrayList<>();
     }
 
-    public List<String> getReflectList() {
-        return reflectList;
+    fun getReflectList(): List<String> {
+        return reflectList
     }
 
-    public void setReflectList(List<String> reflectList) {
-        this.reflectList = reflectList;
+    fun setReflectList(reflectList: List<String>) {
+        this.reflectList = reflectList
     }
 
-    @Override
-    public int getCount() {
-        return listchude.size();
+    override fun getCount(): Int {
+        return listchude.size
     }
 
-    @Override
-    public Object getItem(int i) {
-        return listchude.get(i);
+    override fun getItem(position: Int): Any {
+        return listchude[position]
     }
 
-    @Override
-    public long getItemId(int i) {
-        return i;
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        view= LayoutInflater.from(context).inflate(R.layout.listview_linhvuc,null);
-        TextView linhvuc=view.findViewById(R.id.linhvuc);
-        TextView soluong=view.findViewById(R.id.soluong);
-        Button deleteBtn=view.findViewById(R.id.deleteHistory);
-        String chude= listchude.get(i);
-        linhvuc.setText(chude);
-        firestore.collection("/luanvan").whereEqualTo("researchField",chude)
-                .count().get(AggregateSource.SERVER).addOnSuccessListener(new OnSuccessListener<AggregateQuerySnapshot>() {
-                    @Override
-                    public void onSuccess(AggregateQuerySnapshot snapshot) {
-                        soluong.setText(String.valueOf(snapshot.getCount()));
-                    }
-                });
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view = LayoutInflater.from(context).inflate(R.layout.listview_linhvuc, parent, false)
+        val linhvuc: TextView = view.findViewById(R.id.linhvuc)
+        val soluong: TextView = view.findViewById(R.id.soluong)
+        val deleteBtn: Button = view.findViewById(R.id.deleteHistory)
 
-        return view;
+        val chude = listchude[position]
+        linhvuc.text = chude
+
+        firestore.collection("/luanvan").whereEqualTo("researchField", chude)
+            .count().get(AggregateSource.SERVER).addOnSuccessListener { snapshot ->
+                soluong.text = snapshot.count.toString()
+            }
+
+        return view
     }
 
-    @Override
-    public Filter getFilter() {
-        return filter;
+    override fun getFilter(): Filter {
+        return filter
     }
 }

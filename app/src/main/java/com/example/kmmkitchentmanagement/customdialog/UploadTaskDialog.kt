@@ -33,7 +33,7 @@ class UploadTaskDialog(private val uploadTasks: ArrayList<UploadTask>) : DialogF
         dialogView.layoutParams.width = (resources.displayMetrics.widthPixels * 0.8).toInt()
 
         progressList = view.findViewById(R.id.progressList)
-        ioTaskList = IOTaskList(uploadTasks, context)
+        ioTaskList = context?.let { IOTaskList(uploadTasks, it) }!!
         progressList.adapter = ioTaskList
 
         Utils.setListViewHeightBasedOnChildren(progressList)

@@ -114,7 +114,7 @@ class ChangeInformation(private val thuocTinh: Int, private val currentText: Str
     }
 
     private fun doUpdateAction() {
-        if (!NetworkUtil.isWifiConnected(context)) {
+        if (!context?.let { NetworkUtil.isWifiConnected(it) }!!) {
             showErrorDialog()
             return
         }

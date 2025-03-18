@@ -1,144 +1,132 @@
-package com.example.kmmkitchentmanagement;
+package com.example.kmmkitchentmanagement
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
+import com.example.kmmkitchentmanagement.Model.NguoiDung
+import com.example.kmmkitchentmanagement.adapter.HomeListAdapter
+import com.example.kmmkitchentmanagement.customdialog.ErrorDialog
+import com.example.kmmkitchentmanagement.fragmenthome.ThongBao
+import com.example.kmmkitchentmanagement.fragmenthome.TuyChon
+import com.example.kmmkitchentmanagement.fragmenthome.frag_CongCu
+//import com.example.kmmkitchentmanagement.fragmenthome.frag_ThuVien
+import com.example.kmmkitchentmanagement.interfaceFile.LogoutListener
+import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.firestore.FirebaseFirestore
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager2.widget.ViewPager2;
+class MainActivityHome : AppCompatActivity(), LogoutListener {
+    private lateinit var mTabLayout: TabLayout
+    private lateinit var mViewPager: ViewPager2
 
-import com.example.kmmkitchentmanagement.Model.NguoiDung;
-import com.example.kmmkitchentmanagement.adapter.HomeListAdapter;
-import com.example.kmmkitchentmanagement.customdialog.ErrorDialog;
-import com.example.kmmkitchentmanagement.fragmenthome.ThongBao;
-import com.example.kmmkitchentmanagement.fragmenthome.TuyChon;
-import com.example.kmmkitchentmanagement.fragmenthome.frag_CongCu;
-import com.example.kmmkitchentmanagement.fragmenthome.frag_ThuVien;
-import com.example.kmmkitchentmanagement.interfaceFile.LogoutListener;
-import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.firestore.FirebaseFirestore;
+    private val user = NguoiDung()
 
-public class MainActivityHome extends AppCompatActivity implements LogoutListener {
-    private TabLayout mTabLayout;
-    private ViewPager2 mViewPager;
+    private lateinit var db: FirebaseFirestore
+    private lateinit var mHomeListAdapter: HomeListAdapter
+    private var emailGet: String? = null
+    private lateinit var userViewModel: UserViewModel
 
-    NguoiDung user = new NguoiDung();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.main_activity_home)
 
-    private FirebaseFirestore db;
-    private HomeListAdapter mHomeListAdapter;
-    private String emailGet;
-    private UserViewModel userViewModel;
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity_home);
+        emailGet = intent.getStringExtra("user_email")
+        emailGet?.let { userViewModel.fetchUserData(it) }
 
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        db = FirebaseFirestore.getInstance()
 
-        emailGet = getIntent().getStringExtra("user_email");
-        userViewModel.fetchUserData(emailGet);
+        mHomeListAdapter = HomeListAdapter(supportFragmentManager, lifecycle)
 
-        db = FirebaseFirestore.getInstance();
-
-        mHomeListAdapter = new HomeListAdapter(getSupportFragmentManager(), getLifecycle());
-
-        setupViews();
-
+        setupViews()
     }
 
-    @Override
-    public void onLogout() {
-        logOut();
+    override fun onLogout() {
+        logOut()
     }
 
-    private void setupViews() {
-        mTabLayout = findViewById(R.id.tablayouthome);
-        mViewPager = findViewById(R.id.viewpagerhome);
+    private fun setupViews() {
+        mTabLayout = findViewById(R.id.tablayouthome)
+        mViewPager = findViewById(R.id.viewpagerhome)
 
-        mViewPager.setAdapter(mHomeListAdapter);
+        mViewPager.adapter = mHomeListAdapter
 
-        new TabLayoutMediator(mTabLayout, mViewPager, (tab, position) -> {
-            switch (position) {
-                case 0:
-                    tab.setText("Thư viện");
-                    tab.setIcon(R.drawable.books);
-                    break;
-                case 1:
-                    tab.setText("Thông báo");
-                    tab.setIcon(R.drawable.bell);
-                    break;
-                case 2:
-                    tab.setText("Danh mục");
-                    tab.setIcon(R.drawable.bigger);
-                    break;
-                case 3:
-                    tab.setText("Tùy chọn");
-                    tab.setIcon(R.drawable.setting);
-                    break;
-            }
-        }).attach();
-
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int selectedPosition = tab.getPosition();
-
-                // Lấy Fragment từ tag
-                Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("f" + selectedPosition);
-
-                if (currentFragment instanceof frag_ThuVien) {
-                    ((frag_ThuVien) currentFragment).getUserData();
-                }else if (currentFragment instanceof ThongBao) {
-                    ((ThongBao) currentFragment).setupObservers();
+        TabLayoutMediator(mTabLayout, mViewPager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = "Thư viện"
+                    tab.setIcon(R.drawable.books)
+                }
+                1 -> {
+                    tab.text = "Thông báo"
+                    tab.setIcon(R.drawable.bell)
+                }
+                2 -> {
+                    tab.text = "Danh mục"
+                    tab.setIcon(R.drawable.bigger)
+                }
+                3 -> {
+                    tab.text = "Tùy chọn"
+                    tab.setIcon(R.drawable.setting)
                 }
             }
+        }.attach()
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+        mTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val selectedPosition = tab.position
+
+                // Lấy Fragment từ tag
+//                val currentFragment = supportFragmentManager.findFragmentByTag("f$selectedPosition")
+//
+//                when (currentFragment) {
+//                    is frag_ThuVien -> currentFragment.getUserData()
+//                    is ThongBao -> currentFragment.setupObservers()
+//                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
                 // Không cần xử lý, hoặc thêm logic nếu cần
             }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            override fun onTabReselected(tab: TabLayout.Tab) {
                 // Không cần xử lý, hoặc thêm logic nếu cần
             }
-        });
+        })
     }
 
-    private void logOut() {
-        Intent intent = new Intent(MainActivityHome.this, MainActivity.class);
-        startActivity(intent);
-        new Handler(Looper.getMainLooper()).postDelayed(this::finish, 300);
+    private fun logOut() {
+        val intent = Intent(this@MainActivityHome, MainActivity::class.java)
+        startActivity(intent)
+        Handler(Looper.getMainLooper()).postDelayed({ finish() }, 300)
     }
 
-    public void showErrorDismissDialog(String log) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        ErrorDialog connectErrorDialog = new ErrorDialog(log, true);
-        connectErrorDialog.show(fragmentManager, "errorConnectDialog");
+    fun showErrorDismissDialog(log: String) {
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val connectErrorDialog = ErrorDialog(log, true)
+        connectErrorDialog.show(fragmentManager, "errorConnectDialog")
     }
 
-    @Override
-    public void onBackPressed() {
+    override fun onBackPressed() {
         // Kiểm tra fragment hiện tại
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
 
-        if(currentFragment instanceof ThongBao ||
-            currentFragment instanceof frag_CongCu ||
-            currentFragment instanceof TuyChon){
-                mViewPager.setCurrentItem(0);
-        }else{
-            super.onBackPressed();
+        if (currentFragment is ThongBao || currentFragment is frag_CongCu || currentFragment is TuyChon) {
+            mViewPager.setCurrentItem(0)
+        } else {
+            super.onBackPressed()
         }
     }
 
-    public UserViewModel getUserViewModel() {
-        return userViewModel;
+    fun getUserViewModel(): UserViewModel {
+        return userViewModel
     }
 }

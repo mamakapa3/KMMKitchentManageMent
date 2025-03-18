@@ -1,92 +1,75 @@
-package com.example.kmmkitchentmanagement.adapter;
+package com.example.kmmkitchentmanagement.adapter
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.TextView
+import com.example.kmmkitchentmanagement.Model.Notification
+import com.example.kmmkitchentmanagement.R
+import com.example.kmmkitchentmanagement.viewmodelExtends.NotificationViewModel
 
-import com.example.kmmkitchentmanagement.Model.Notification;
-import com.example.kmmkitchentmanagement.R;
-import com.example.kmmkitchentmanagement.viewmodelExtends.NotificationViewModel;
+class NotificationAdapter(
+    private val context: Context,
+    private var notificationList: MutableList<Notification> = mutableListOf(),
+    private val notificationViewModel: NotificationViewModel
+) : BaseAdapter() {
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class NotificationAdapter extends BaseAdapter {
-    private Context context;
-    private List<Notification> notificationList;
-    private NotificationViewModel notificationViewModel;
-
-    public NotificationAdapter(Context context, List<Notification> notifications, NotificationViewModel viewModel) {
-        this.context = context;
-        this.notificationList = notifications != null ? notifications : new ArrayList<>();
-        this.notificationViewModel = viewModel;
+    override fun getCount(): Int {
+        return notificationList.size
     }
 
-    @Override
-    public int getCount() {
-        return notificationList.size();
+    override fun getItem(position: Int): Any {
+        return notificationList[position]
     }
 
-    @Override
-    public Object getItem(int position) {
-        return notificationList.get(position);
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        var holder: ViewHolder
+
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.listview_notification, parent, false).apply {
+            holder = ViewHolder()
+            holder.imageEmail = findViewById(R.id.imageEmail)
+            holder.titleTextView = findViewById(R.id.titleNotificatoin)
+            holder.userTextView = findViewById(R.id.userNotificatoin)
+            holder.timeTextView = findViewById(R.id.timeNotification)
+            tag = holder
+        }
+
+        holder = view.tag as ViewHolder
+
+        val notification = getItem(position) as Notification
+        updateView(holder, notification)
+
+        return view
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.listview_notification, parent, false);
-            holder = new ViewHolder();
-            holder.imageEmail = convertView.findViewById(R.id.imageEmail);
-            holder.titleTextView = convertView.findViewById(R.id.titleNotificatoin);
-            holder.userTextView = convertView.findViewById(R.id.userNotificatoin);
-            holder.timeTextView = convertView.findViewById(R.id.timeNotification);
-            convertView.setTag(holder);
+    private fun updateView(holder: ViewHolder, notification: Notification) {
+        if (notification.isRead) {
+            holder.imageEmail.setImageResource(R.drawable.open_message)
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder.imageEmail.setImageResource(R.drawable.email)
         }
-
-        // Cập nhật dữ liệu cho các view
-        Notification notification = (Notification) getItem(position);
-        updateView(holder, notification);
-
-        return convertView;
+        holder.titleTextView.text = notification.title
+        holder.userTextView.text = notification.user
+        holder.timeTextView.text = notification.dateString
     }
 
-    private void updateView(ViewHolder holder, Notification notification) {
-        if (notification.isRead()) {
-            holder.imageEmail.setImageResource(R.drawable.open_message);
-        } else {
-            holder.imageEmail.setImageResource(R.drawable.email);
-        }
-        holder.titleTextView.setText(notification.getTitle());
-        holder.userTextView.setText(notification.getUser());
-        holder.timeTextView.setText(notification.getDateString());
+    fun updateNotifications(notifications: List<Notification>?) {
+        notificationList.clear()
+        notifications?.let { notificationList.addAll(it) }
+        notifyDataSetChanged()
     }
 
-    public void updateNotifications(List<Notification> notifications) {
-        this.notificationList.clear();
-        if (notifications != null) {
-            this.notificationList.addAll(notifications);
-        }
-        notifyDataSetChanged(); // Thông báo cho ListView để cập nhật
-    }
-
-    private static class ViewHolder {
-        ImageView imageEmail;
-        TextView titleTextView;
-        TextView userTextView;
-        TextView timeTextView;
+    private class ViewHolder {
+        lateinit var imageEmail: ImageView
+        lateinit var titleTextView: TextView
+        lateinit var userTextView: TextView
+        lateinit var timeTextView: TextView
     }
 }
