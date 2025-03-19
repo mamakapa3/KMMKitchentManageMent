@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "982833765847",
+    "firebase_url": "https://kmm-kitchentmanagement-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "kmm-kitchentmanagement",
+    "storage_bucket": "kmm-kitchentmanagement.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982833765847:android:c173701c25d290dcb8bf92",
+        "android_client_info": {
+          "package_name": "com.example.kmmkitchentmanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApgU9lL5ZdNISCZlqbqr_LJCSXceyXHMw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
