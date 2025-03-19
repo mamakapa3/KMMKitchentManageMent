@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.kmmkitchentmanagement.Data.NetworkUtil
 import com.example.kmmkitchentmanagement.R
@@ -83,7 +84,7 @@ class VerifyEmail : DialogFragment() {
         }
     }
 
-    fun getEmail(tt: String, username: String, callback: EmailCallback) {
+    fun getEmail(tt: String, username: String, callback: EmailCallback) { // tìm kiếm email của người dùng trong cơ sở dữ liệu Firebase Firestore
         db.collection("User")
             .whereEqualTo(tt, username)
             .get()
@@ -144,23 +145,36 @@ class VerifyEmail : DialogFragment() {
     fun WarmingDialogChange(name: String, newEmail: String, oldEmail: String) {
         val fragmentManager = parentFragmentManager
         val warmingDialog = WarmingDialog(
-            "Tài khoản: <b><i>" + name + "</i></b> chưa xác thực email: <b><i><font color='red'>" + newEmail + "</font></i></b>." +
-                    "Vui lòng xác thực email hoặc chọn <b>Khôi phục</b> để sử dụng lại email: <b><i><font color='blue'>" + oldEmail + "</font></i></b>.",
+            "Tài khoản: <b><i>$name</i></b> chưa xác thực email: <b><i><font color='red'>$newEmail</font></i></b>." +
+                    "Vui lòng xác thực email hoặc chọn <b>Khôi phục</b> để sử dụng lại email: <b><i><font color='blue'>$oldEmail</font></i></b>.",
             "Khôi phục", "Bỏ qua"
         )
         warmingDialog.show(fragmentManager, "WarmingDialog")
-        fragmentManager.setFragmentResultListener(
-            "requestKey",
-            this
-        ) { requestKey: String?, bundle: Bundle ->
+        fragmentManager.setFragmentResultListener("requestKey", this) { _, bundle ->
             val result = bundle.getBoolean("result")
             if (result) {
+                // Người dùng chọn "Khôi phục" -> Gọi hàm khôi phục email cũ
                 getOldEmail(oldEmail)
+            } else {
+                // Người dùng chọn "Bỏ qua" -> Gửi lại email xác thực
+                FirebaseAuth.getInstance().currentUser?.sendEmailVerification()
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            showToast("Đã gửi lại email xác thực. Vui lòng kiểm tra hộp thư của bạn!")
+                        } else {
+                            showToast("Không thể gửi lại email xác thực. Vui lòng thử lại sau!")
+                        }
+                    }
             }
         }
     }
 
-    fun getOldEmail(oldEmail: String) {
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun getOldEmail(oldEmail: String) { //khôi phục email cũ
         db.collection("User")
             .whereEqualTo("previousEmail", oldEmail)
             .get()

@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.example.kmmkitchentmanagement.Data.NetworkUtil
@@ -19,11 +20,7 @@ import com.example.kmmkitchentmanagement.customdialog.*
 import com.example.kmmkitchentmanagement.interfaceFile.EmailCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnDangNhap: Button
@@ -51,7 +48,6 @@ class MainActivity : AppCompatActivity() {
         errorLogin = findViewById(R.id.errorLogin)
         linkGetPassword = findViewById(R.id.LinkGetPassword)
         linkGetPassword.setOnClickListener { openForgotPasswordFragment() }
-
         errorLogin.visibility = View.GONE
 
         togglePasswordVisibility.setOnClickListener {
@@ -65,7 +61,7 @@ class MainActivity : AppCompatActivity() {
             passwordEditText.setSelection(passwordEditText.text.length)
         }
 
-        passwordEditText.setText("123456a@")
+        passwordEditText.setText("123123asd")
         usernameOrEmailEditText.setText("nguyentrongninh2k3@gmail.com")
     }
 
@@ -74,8 +70,7 @@ class MainActivity : AppCompatActivity() {
         if (!NetworkUtil.isWifiConnected(this)) {
             showErrorConnectDialog()
         }
-        val currentUser: FirebaseUser? = mAuth.currentUser
-        currentUser?.let {
+        mAuth.currentUser?.let {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -102,68 +97,29 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            showLoading()
-
             if (!Patterns.EMAIL_ADDRESS.matcher(usernameOrEmail).matches()) {
                 errorLogin.visibility = View.VISIBLE
-                hideLoading()
             } else {
-                val fragment = supportFragmentManager.findFragmentByTag("customdialog") as? VerifyEmail
-                fragment?.getEmail("email", usernameOrEmail, object : EmailCallback {
-                    override fun onEmailRetrieved(email: String) {
-                        CheckLogin(email, password)
-                    }
-
-                    override fun onErrorSearching() {
-                        errorLogin.visibility = View.VISIBLE
-                        hideLoading()
-                    }
-
-                    override fun onErrorETC() {
-                        showErrorConnectDialog()
-                    }
-                })
+                CheckLogin(usernameOrEmail, password)
             }
         }
     }
 
     private fun CheckLogin(email: String, password: String) {
-        mAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                hideLoading()
-                if (task.isSuccessful) {
-                    val intent = Intent(this, MainActivityHome::class.java)
-                    intent.putExtra("user_email", email)
-                    startActivity(intent)
-                    Handler(Looper.getMainLooper()).postDelayed({ finish() }, 300)
-                } else {
-                    errorLogin.visibility = View.VISIBLE
-                    if (!NetworkUtil.isWifiConnected(this)) {
-                        showErrorConnectDialog()
-                    }
-                }
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+            if (task.isSuccessful && mAuth.currentUser?.isEmailVerified == true) {
+                val intent = Intent(this, MainActivityHome::class.java)
+                intent.putExtra("user_email", email)
+                startActivity(intent)
+                Handler(Looper.getMainLooper()).postDelayed({ finish() }, 300)
+            } else {
+                errorLogin.visibility = View.VISIBLE
             }
-            .addOnFailureListener {
-                Log.e("FirebaseError", "Error signing in: ${it.message}")
-                showErrorConnectDialog()
-            }
+        }
     }
 
     private fun showErrorConnectDialog() {
-        hideLoading()
-        val log = "Không có kết nối mạng. Vui lòng kiểm tra lại kết nối rồi thử lại sau!"
         val fragmentManager: FragmentManager = supportFragmentManager
-        ErrorDialog(log, false).show(fragmentManager, "errorConnectDialog")
-    }
-
-    private fun showLoading() {
-        if (loadingDialogFragment == null) {
-            loadingDialogFragment = Loading()
-        }
-        loadingDialogFragment?.show(supportFragmentManager, "loading")
-    }
-
-    private fun hideLoading() {
-        loadingDialogFragment?.dismiss()
+        ErrorDialog("Không có kết nối mạng. Vui lòng kiểm tra lại kết nối!", false).show(fragmentManager, "errorConnectDialog")
     }
 }
