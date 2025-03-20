@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/chinhluanvan"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".fragment_themND.ChinhLuanVan">
-
+    android:background="#ffffff"
+    tools:context=".fragment_themND.themNhom">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
         <LinearLayout
 
@@ -25,29 +19,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/btnbackEditLV"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/angle_small_left"
-                    app:tint="#000000"
-                    tools:ignore="SpeakableTextPresentCheck" />
 
                 <TextView
                     android:id="@+id/textView8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAlignment="center"
                     android:layout_weight="1"
-                    android:text="Chỉnh sửa luận văn"
+                    android:text="Thêm luận văn"
                     android:textColor="#BD8321"
-                    android:textSize="35dp"
+                    android:textSize="40sp"
                     android:textStyle="bold|italic" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -92,7 +75,7 @@
                     android:textSize="25dp" />
 
                 <EditText
-                    android:id="@+id/editTitleLV_FIX"
+                    android:id="@+id/editTitleLV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -112,7 +95,7 @@
                     android:textSize="24dp" />
 
                 <ImageButton
-                    android:id="@+id/btnAvaLV_FIX"
+                    android:id="@+id/btnAvaLV"
                     android:layout_width="80dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
@@ -125,8 +108,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/textView13"
@@ -139,16 +122,18 @@
                         android:textSize="24dp" />
 
                     <Button
-                        android:id="@+id/btnAddTG_FIX"
+                        android:id="@+id/btnAddTG"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:backgroundTint="#BD8321"
-                        android:text="+" />
-
+                        android:text="+"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <EditText
-                    android:id="@+id/editTacGiaLV_FIX"
+                    android:id="@+id/editTacGiaLV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -160,8 +145,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/textView133"
@@ -174,15 +159,18 @@
                         android:textSize="24dp" />
 
                     <Button
-                        android:id="@+id/btnAddLinhVuc_FIX"
+                        android:id="@+id/btnAddLinhVuc"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:backgroundTint="#BD8321"
-                        android:text="+" />
+                        android:text="+"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <EditText
-                    android:id="@+id/editLinhVucLV_FIX"
+                    android:id="@+id/editLinhVucLV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -201,7 +189,7 @@
                     android:textSize="25dp" />
 
                 <EditText
-                    android:id="@+id/editMoTaTG_FIX"
+                    android:id="@+id/editMoTaTG"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -225,7 +213,7 @@
                     android:textSize="24dp" />
 
                 <EditText
-                    android:id="@+id/mEditTrichDan"
+                    android:id="@+id/EditTrichDanLV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -236,15 +224,47 @@
                     android:overScrollMode="always"
                     android:scrollbarStyle="insideInset"
                     android:scrollHorizontally="false"
-                    android:textColor="#000000"
                     android:textSize="20dp"
                     tools:ignore="SpeakableTextPresentCheck" />
 
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Trạng Thái Xuất Bản :"
+                    android:textSize="25dp" />
+
+                <RadioGroup
+                    android:id="@+id/radioXB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:checkedButton="@+id/btnRadioXBTrue">
+
+                    <RadioButton
+                        android:id="@+id/btnRadioXBTrue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="40dp"
+                        android:text="Xuất bản"
+                        />
+                    <RadioButton
+                        android:id="@+id/btnRadioXBFalse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:text="Đang phát triển" />
+                </RadioGroup>
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/viewTGLV_FIX"
+                android:id="@+id/viewTGLV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -261,7 +281,7 @@
                     android:textSize="25dp" />
 
                 <EditText
-                    android:id="@+id/editTGLV_FIX"
+                    android:id="@+id/editTGLV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -270,16 +290,15 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/btnFixLV"
+                android:id="@+id/btnAddLV"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:backgroundTint="#BD8321"
-                android:text="Thay đổi" />
+                android:text="Thêm" />
 
 
         </LinearLayout>
     </ScrollView>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

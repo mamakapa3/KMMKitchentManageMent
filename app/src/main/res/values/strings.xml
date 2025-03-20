@@ -5,7 +5,7 @@
     <!-- Error messages -->
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>
-    <string name="LuanVanList">Danh sách luận văn</string>
+    <string name="NhomList">Danh sách luận văn</string>
     <string name="TacGia">Danh sách tác giả</string>
     <string name="Saved">Xem sau</string>
     <string name="LinhVuc">Lĩnh vực</string>

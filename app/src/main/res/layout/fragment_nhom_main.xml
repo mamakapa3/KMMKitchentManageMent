@@ -2,13 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tacgiaMain"
+    android:id="@+id/NhomMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".fragment_thuvien.TacGiaMain">
+    android:orientation="vertical"
+    tools:context=".fragment_nhom.NhomMain">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +21,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -31,7 +31,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/btnBackListTG"
+                    android:id="@+id/btnBackListLV"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@android:color/transparent"
@@ -41,17 +41,15 @@
                     tools:ignore="SpeakableTextPresentCheck" />
 
                 <TextView
-                    android:id="@+id/txtTGTitle"
+                    android:id="@+id/txtLVTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-
-                    android:text="Danh sách tác giả"
+                    android:text="Danh sách Nhóm"
                     android:textColor="#BD8321"
                     android:textSize="35dp"
                     android:textStyle="bold|italic" />
-
             </LinearLayout>
 
         </LinearLayout>
@@ -62,7 +60,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:background="#CFCFCF"
             app:cardCornerRadius="10dp">
 
@@ -75,8 +73,11 @@
         </androidx.cardview.widget.CardView>
 
         <ListView
-            android:id="@+id/ListTG"
+            android:id="@+id/listLV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scrollbarAlwaysDrawVerticalTrack="true" />
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

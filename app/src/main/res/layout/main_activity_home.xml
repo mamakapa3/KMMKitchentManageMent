@@ -28,25 +28,25 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thư viện"
-            android:icon="@drawable/books" />
+            android:text="Nhóm của bạn"
+            android:icon="@drawable/authors" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cá nhân"
-            android:icon="@drawable/book_open_cover" />
+            android:text="Thêm nhóm"
+            android:icon="@drawable/add_author" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Danh mục"
-            android:icon="@drawable/bigger" />
+            android:text="Thông báo"
+            android:icon="@drawable/bell" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cài đặt"
+            android:text="Tùy chọn"
             android:icon="@drawable/setting" />
     </com.google.android.material.tabs.TabLayout>
 
