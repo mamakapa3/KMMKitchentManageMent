@@ -5,15 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.example.kmmkitchentmanagement.Model.Nhom
 
 class NhomVM : ViewModel() {
-    companion object {
-        val data: MutableLiveData<Nhom> = MutableLiveData()
-    }
+    private val data: MutableLiveData<Nhom> = MutableLiveData()
 
     fun getData(): MutableLiveData<Nhom> {
         return data
     }
 
-    fun setData(Nhom: Nhom) {
-        data.value = Nhom
+    fun setData(nhom: Nhom) {
+        data.value = nhom
     }
 }
+

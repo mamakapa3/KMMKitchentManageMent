@@ -28,9 +28,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
@@ -38,86 +39,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Tiêu đề"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Tên Nhóm"
                 android:textColor="#5C4033"
-                android:textSize="24dp"
+                android:textSize="40dp"
                 android:textStyle="bold"
                 tools:ignore="MissingConstraints" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/titleLV1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tác giả: "
-                    android:textColor="#4E4D4D"
-                    android:textSize="12dp"
-                    android:textStyle="italic"
-                    tools:ignore="MissingConstraints,TextSizeCheck" />
-
-                <TextView
-                    android:id="@+id/txtTacGiaLV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text=""
-                    android:textSize="12dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/titleLV2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chủ đề: "
-                    android:textColor="#4E4D4D"
-                    android:textSize="12dp"
-                    android:textStyle="italic"
-                    tools:ignore="MissingConstraints,TextSizeCheck" />
-
-                <TextView
-                    android:id="@+id/txtChuDeLV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text=""
-                    android:textSize="12dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/titleLV4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tình trạng: "
-                    android:textColor="#4E4D4D"
-                    android:textSize="12dp"
-                    android:textStyle="italic"
-                    tools:ignore="MissingConstraints,TextSizeCheck" />
-
-                <TextView
-                    android:id="@+id/txtTinhTrangLV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text=""
-                    android:textSize="12dp" />
-
-            </LinearLayout>
 
         </LinearLayout>
 

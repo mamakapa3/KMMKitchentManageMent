@@ -55,16 +55,10 @@ class NhomAdapter(private val context: Context, private var list: MutableList<Nh
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.listview_noi_dung_nhom_main, parent, false)
 
         val textLVtieude: TextView = view.findViewById(R.id.textLVtieude)
-        val txtTacGiaLv: TextView = view.findViewById(R.id.txtTacGiaLV)
-        val txtChuDeLV: TextView = view.findViewById(R.id.txtChuDeLV)
-        val txtTinhTrangLV: TextView = view.findViewById(R.id.txtTinhTrangLV)
         val imageNDLV: ImageView = view.findViewById(R.id.imageNDLV)
 
         val Nhom = list[position]
         textLVtieude.text = Nhom.title
-        txtTacGiaLv.text = Nhom.tacGias
-        txtChuDeLV.text = Nhom.title
-        txtTinhTrangLV.text = if (Nhom.isPublished) "Đã xuất bản" else "Chưa xuất bản"
 
         val storageReference: StorageReference = firebaseStorage.getReference("/Nhom/image/${Nhom.id}.jpg")
         Glide.with(context)

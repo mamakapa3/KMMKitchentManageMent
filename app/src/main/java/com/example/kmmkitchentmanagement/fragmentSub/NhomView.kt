@@ -24,6 +24,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -60,7 +62,7 @@ class NhomView : Fragment() {
     private lateinit var moTa: TextView
     private lateinit var trichDan: TextView
     private lateinit var imageView: ImageView
-    private lateinit var NhomVM: NhomVM
+    private val NhomVM: NhomVM by viewModels()
     private var Nhom: Nhom = Nhom()
     private var tacGiaClass: TacGia = TacGia()
     private val file = File(Environment.getExternalStoragePublicDirectory("//").absolutePath + "/QLNhom/")
@@ -85,7 +87,7 @@ class NhomView : Fragment() {
     }
 
     private fun dataHandler() {
-        NhomVM = ViewModelProvider(requireParentFragment())[NhomVM::class.java]
+//        NhomVM = ViewModelProvider(requireParentFragment())[NhomVM::class.java]
         NhomVM.getData().observe(viewLifecycleOwner) { nhom: Nhom? ->
             if (nhom != null) {
                 Nhom = nhom

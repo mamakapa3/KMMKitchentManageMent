@@ -57,23 +57,6 @@
                     android:iconifiedByDefault="false"
                     android:queryBackground="@null" />
             </androidx.cardview.widget.CardView>
-            <ListView
-                android:id="@+id/listNhom"
-                android:layout_width="match_parent"
-                android:layout_height="243dp"
-                android:layout_marginBottom="10dp"></ListView>
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="45dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:text="Gần đây"
-                android:textColor="#93661A"
-                android:textSize="25dp"
-                android:textStyle="italic" />
 
             <ListView
                 android:id="@+id/listGanDay"

@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.kmmkitchentmanagement.AppUtils.Utils
 import com.example.kmmkitchentmanagement.Model.Nhom
@@ -28,13 +29,11 @@ import com.google.firebase.firestore.QuerySnapshot
 
 class frag_Nhom : Fragment() {
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var NhomVM: NhomVM
-    private lateinit var catalogView: ListView
     private lateinit var listGanDay: ListView
     private lateinit var NhomAdapter: NhomAdapter
-    private lateinit var catalogAdapter: ClickableItemsAdapter
     private var listRecent: MutableList<Nhom> = mutableListOf()
     private lateinit var userViewModel: UserViewModel
+    private val NhomVM: NhomVM by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +52,6 @@ class frag_Nhom : Fragment() {
         addView(view)
         dataHandler()
         attackData()
-        attackView()
         eventHandler()
     }
 
@@ -83,21 +81,10 @@ class frag_Nhom : Fragment() {
     }
 
     private fun addView(view: View) {
-        catalogView = view.findViewById(R.id.listNhom)
         listGanDay = view.findViewById(R.id.listGanDay)
     }
 // nhom item
-    private fun attackView() {
-    val catalogs = arrayListOf(
-        intArrayOf(R.drawable.ic_luan_van, R.string.NhomList),
-        intArrayOf(R.drawable.ic_tac_gia, R.string.TacGia),
-        intArrayOf(R.drawable.ic_chu_de, R.string.LinhVuc),
-        intArrayOf(R.drawable.ic_luu, R.string.Saved)
-    )
-        catalogAdapter = ClickableItemsAdapter(requireContext(), catalogs)
-        catalogView.adapter = catalogAdapter
-        Utils.setListViewHeightBasedOnChildren(catalogView)
-    }
+
 
     private fun eventHandler() {
         listGanDay.setOnItemClickListener { _, _, i, _ ->
