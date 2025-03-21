@@ -138,6 +138,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="©Dova Divator Team"
+        android:text="©NinhBeo"
         android:textColor="#cccccc"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

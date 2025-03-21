@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KMM</string>
+    <string name="NhomList">Danh sách luận văn</string>
+    <string name="TacGia">Tác giả</string>
+    <string name="Saved">Xem sau</string>
+    <string name="itemType">Lĩnh vực</string>
+</resources>
