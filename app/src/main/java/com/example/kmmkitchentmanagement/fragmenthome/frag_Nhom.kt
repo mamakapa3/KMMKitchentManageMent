@@ -18,8 +18,8 @@ import com.example.kmmkitchentmanagement.Model.NguoiDung
 import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.adapter.NhomAdapter
 import com.example.kmmkitchentmanagement.adapter.ClickableItemsAdapter
+import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
 import com.example.kmmkitchentmanagement.fragmentSub.NhomView
-import com.example.kmmkitchentmanagement.fragmentSub.StorageView
 import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
 import com.google.firebase.firestore.EventListener
@@ -44,6 +44,7 @@ class frag_Nhom : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_nhom, container, false)
     }
 
@@ -90,7 +91,7 @@ class frag_Nhom : Fragment() {
         listGanDay.setOnItemClickListener { _, _, i, _ ->
             NhomVM.setData(listRecent[i])
             childFragmentManager.beginTransaction()
-                .replace(R.id.CacNhomView, StorageView())
+                .replace(R.id.CacNhomView, frag_Items())
                 .addToBackStack(null)
                 .commit()
         }

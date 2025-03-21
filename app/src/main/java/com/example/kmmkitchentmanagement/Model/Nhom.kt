@@ -11,7 +11,7 @@ data class Nhom(
 
     override fun toString(): String {
         return """
-        LuanVan {
+        Nhom {
             id: $id
             title: $title
             addTime: $addTime

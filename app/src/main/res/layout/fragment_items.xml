@@ -9,10 +9,9 @@
     android:background="#ffffff"
     tools:context=".fragmenthome.frag_Items">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,22 +20,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/btnBackListLV"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@android:color/transparent"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/angle_small_left"
-                    app:tint="#000000"
-                    tools:ignore="SpeakableTextPresentCheck" />
 
                 <TextView
                     android:id="@+id/txtLVTitle"
@@ -44,36 +35,35 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="Danh sách items"
+                    android:text="Items của bạn"
                     android:textColor="#BD8321"
                     android:textSize="35dp"
                     android:textStyle="bold|italic" />
             </LinearLayout>
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="#CFCFCF"
-            app:cardCornerRadius="10dp">
-
-            <SearchView
-                android:id="@+id/searchTG"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:iconifiedByDefault="false"
-                android:queryBackground="@null" />
-        </androidx.cardview.widget.CardView>
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="#CFCFCF"
+                app:cardCornerRadius="10dp">
 
-        <ListView
-            android:id="@+id/listLV"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarAlwaysDrawVerticalTrack="true" />
-    </LinearLayout>
+                <SearchView
+                    android:id="@+id/searchTG"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:iconifiedByDefault="false"
+                    android:queryBackground="@null" />
+            </androidx.cardview.widget.CardView>
+
+            <ListView
+                android:id="@+id/listItems"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"></ListView>
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

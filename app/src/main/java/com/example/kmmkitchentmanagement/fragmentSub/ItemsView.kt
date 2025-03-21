@@ -1,51 +1,29 @@
 package com.example.kmmkitchentmanagement.fragmentSub
 
 
-import android.os.Environment.DIRECTORY_DOWNLOADS
-
-import android.Manifest
-import android.app.DownloadManager
-import android.content.Context
-import android.content.DialogInterface
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 
-import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.kmmkitchentmanagement.Model.Items
-import com.example.kmmkitchentmanagement.Model.TacGia
-import com.example.kmmkitchentmanagement.Model.historyObj
 import com.example.kmmkitchentmanagement.R
 //import com.example.kmmkitchentmanagement.fragment_themND.ChinhItems
 import com.example.kmmkitchentmanagement.viewmodelExtends.ItemsVM
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
-import java.io.File
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class ItemsView : Fragment() {
@@ -86,9 +64,15 @@ class ItemsView : Fragment() {
     }
 
     private fun dataHandler() {
+        Log.d("Debug", "dataHandler() ĐÃ ĐƯỢC GỌI")
+
         ItemsVM.getData().observe(viewLifecycleOwner) { items: Items? ->
+            Log.d("Debug", "ViewModel cập nhật dữ liệu: $items")
             if (items != null) {
                 Items = items
+                attachData()  // 🛠 Gọi lại UI khi có dữ liệu mới
+            } else {
+                Log.e("Debug", "Items vẫn NULL")
             }
         }
     }

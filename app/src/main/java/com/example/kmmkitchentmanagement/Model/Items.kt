@@ -6,6 +6,7 @@ import java.util.Date
 data class Items(
     var id: String = "",
     var title: String = "Not null",
+    var number: Int = 0,
     var description: String = "",
     var addTime: Date = Date(),
 //    var publishedDate: Date = Date(),
@@ -15,9 +16,10 @@ data class Items(
 
     override fun toString(): String {
         return """
-        LuanVan {
+        Items {
             id: $id
             title: $title
+            number: $number
             description: $description
             addTime: $addTime
             supplier: $supplier

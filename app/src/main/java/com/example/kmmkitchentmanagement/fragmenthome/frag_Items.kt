@@ -1,36 +1,28 @@
 package com.example.kmmkitchentmanagement.fragmenthome
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.kmmkitchentmanagement.AppUtils.Utils
 import com.example.kmmkitchentmanagement.Model.Items
-import com.example.kmmkitchentmanagement.Model.NguoiDung
 import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.adapter.ItemsAdapter
-import com.example.kmmkitchentmanagement.adapter.ClickableItemsAdapter
 import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
-import com.example.kmmkitchentmanagement.fragmentSub.StorageView
 import com.example.kmmkitchentmanagement.viewmodelExtends.ItemsVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 
 class frag_Items : Fragment() {
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var listGanDay: ListView
+    private lateinit var listItems: ListView
     private lateinit var ItemsAdapter: ItemsAdapter
     private var listRecent: MutableList<Items> = mutableListOf()
     private lateinit var userViewModel: UserViewModel
@@ -72,24 +64,24 @@ class frag_Items : Fragment() {
                     listRecent.clear()
                     value?.toObjects(Items::class.java)?.let { listRecent.addAll(it) }
                     ItemsAdapter.notifyDataSetChanged()
-                    Utils.setListViewHeightBasedOnChildren(listGanDay)
+                    Utils.setListViewHeightBasedOnChildren(listItems)
                 }
             }
     }
 
     private fun attackData() {
-        listGanDay.adapter = ItemsAdapter
+        listItems.adapter = ItemsAdapter
     }
 
     private fun addView(view: View) {
-        listGanDay = view.findViewById(R.id.listGanDay)
+        listItems = view.findViewById(R.id.listItems)
     }
 
     private fun eventHandler() {
-        listGanDay.setOnItemClickListener { _, _, i, _ ->
+        listItems.setOnItemClickListener { _, _, i, _ ->
             ItemsVM.setData(listRecent[i])
             childFragmentManager.beginTransaction()
-                .replace(R.id.CacItemsView, StorageView())
+                .replace(R.id.CacItemsView, ItemsView())
                 .addToBackStack(null)
                 .commit()
         }

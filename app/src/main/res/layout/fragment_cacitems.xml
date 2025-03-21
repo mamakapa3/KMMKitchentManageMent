@@ -8,11 +8,13 @@
     android:background="#FFFFFF"
     tools:context=".fragmentSub.NhomView">
 
+    <!-- Header: Nút back + Tiêu đề -->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -29,31 +31,33 @@
 
         <TextView
             android:id="@+id/txtLVTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_weight="1"
-            android:text="Chi tiết luận văn"
+            android:text="Chi tiết Items"
             android:textColor="#BD8321"
-            android:textSize="35dp"
+            android:textSize="30sp"
             android:textStyle="bold|italic" />
-
     </LinearLayout>
 
+    <!-- Nội dung chính -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@id/linearLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <!-- Ảnh sản phẩm -->
             <ImageView
                 android:id="@+id/imageLVviewi"
                 android:layout_width="200dp"
@@ -63,190 +67,94 @@
                 android:scaleType="fitXY"
                 tools:src="@tools:sample/avatars" />
 
+            <!-- Tiêu đề sản phẩm -->
+            <TextView
+                android:id="@+id/textTenLVviewi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:text="Tiêu Đề"
+                android:textAlignment="center"
+                android:textColor="#BD8321"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <!-- Các thông tin chi tiết -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                android:gravity="center">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="0.5"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp">
-
-                    <Button
-                        android:id="@+id/btnTangview"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#D8B533"
-                        android:drawableStart="@android:drawable/ic_menu_edit"
-                        android:drawablePadding="4dp"
-                        android:drawableTint="#FFFFFF"
-                        android:text="Tăng"
-                        android:textSize="24sp"
-                        app:iconSize="24dp"
-                        app:icon="@drawable/arrow_up" />
-
-                    <Button
-                        android:id="@+id/btnGiamview"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FD0000"
-                        android:drawableStart="@android:drawable/ic_menu_delete"
-                        android:drawablePadding="4dp"
-                        android:drawableTint="#FFFFFF"
-                        android:text="Giảm"
-                        android:textSize="24sp"
-                        app:iconSize="24dp"
-                        app:icon="@drawable/arrow_down" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textTenLVviewi"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textNumberLVviewi"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:text="Tiêu Đề"
-                    android:textAlignment="center"
-                    android:textColor="#BD8321"
-                    android:textSize="40dp"
+                    android:text="Số lượng: "
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textitemTypeLVviewi"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:text="Loại: "
+                    android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/textView20"
-                        android:layout_width="170dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Số Lượng : "
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/texttacgiaLVviewi"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:textSize="20dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textngayupLVviewi"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:text="Ngày Nhập: "
+                    android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Loại :"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/textitemTypeLVviewi"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="20dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textmotaLVviewi"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:text="Mô tả: "
+                    android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/textView26"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ngày Nhập : "
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/textngayupLVviewi"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="20dp" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/texttrichdanLVviewi"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp">
-
-                    <TextView
-                        android:id="@+id/textView22"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Mô Tả :"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/textmotaLVviewi"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:maxLength="1200"
-                        android:textSize="20dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView24"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Nguồn :"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/texttrichdanLVviewi"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLength="1000"
-                        android:textSize="20dp" />
-                </LinearLayout>
-
+                    android:layout_height="wrap_content"
+                    android:text="Nguồn: "
+                    android:textSize="20sp" />
             </LinearLayout>
 
+            <!-- Nút Tăng/Giảm -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnTangview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#D8B533"
+                    android:text="Tăng"
+                    android:textSize="20sp"
+                    app:icon="@drawable/arrow_up"
+                    app:iconSize="20dp" />
+
+                <Button
+                    android:id="@+id/btnGiamview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FD0000"
+                    android:text="Giảm"
+                    android:textSize="20sp"
+                    app:icon="@drawable/arrow_down"
+                    app:iconSize="20dp" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
