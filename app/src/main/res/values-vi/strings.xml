@@ -4,5 +4,5 @@
     <string name="NhomList">Danh sách luận văn</string>
     <string name="TacGia">Tác giả</string>
     <string name="Saved">Xem sau</string>
-    <string name="LinhVuc">Lĩnh vực</string>
+    <string name="itemType">Lĩnh vực</string>
 </resources>

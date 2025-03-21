@@ -8,7 +8,7 @@
     <string name="NhomList">Danh sách luận văn</string>
     <string name="TacGia">Danh sách tác giả</string>
     <string name="Saved">Xem sau</string>
-    <string name="LinhVuc">Lĩnh vực</string>
+    <string name="itemType">Lĩnh vực</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main3">Leanback MainActivity3</string>
     <string name="browse_title">Videos by Your Company</string>

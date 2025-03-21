@@ -13,14 +13,14 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.kmmkitchentmanagement.AppUtils.Utils
-import com.example.kmmkitchentmanagement.Model.Nhom
+import com.example.kmmkitchentmanagement.Model.Items
 import com.example.kmmkitchentmanagement.Model.NguoiDung
 import com.example.kmmkitchentmanagement.R
-import com.example.kmmkitchentmanagement.adapter.NhomAdapter
+import com.example.kmmkitchentmanagement.adapter.ItemsAdapter
 import com.example.kmmkitchentmanagement.adapter.ClickableItemsAdapter
-import com.example.kmmkitchentmanagement.fragmentSub.NhomView
+import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
 import com.example.kmmkitchentmanagement.fragmentSub.StorageView
-import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
+import com.example.kmmkitchentmanagement.viewmodelExtends.ItemsVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,23 +28,23 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 
-class frag_Nhom : Fragment() {
+class frag_Items : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var listGanDay: ListView
-    private lateinit var NhomAdapter: NhomAdapter
-    private var listRecent: MutableList<Nhom> = mutableListOf()
+    private lateinit var ItemsAdapter: ItemsAdapter
+    private var listRecent: MutableList<Items> = mutableListOf()
     private lateinit var userViewModel: UserViewModel
-    private val NhomVM: NhomVM by viewModels()
+    private val ItemsVM: ItemsVM by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
     }
-// layout
+    // layout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_nhom, container, false)
+        return inflater.inflate(R.layout.fragment_items, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,8 +61,8 @@ class frag_Nhom : Fragment() {
     }
 
     private fun dataHandler() {
-        NhomAdapter = NhomAdapter(requireContext(), listRecent)
-        firestore.collection("/Nhom")
+        ItemsAdapter = ItemsAdapter(requireContext(), listRecent)
+        firestore.collection("/Items")
             .orderBy("addTime", Query.Direction.DESCENDING)
             .limit(5)
             .addSnapshotListener { value, error ->
@@ -70,27 +70,26 @@ class frag_Nhom : Fragment() {
                     Toast.makeText(requireActivity(), "Lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show()
                 } else {
                     listRecent.clear()
-                    value?.toObjects(Nhom::class.java)?.let { listRecent.addAll(it) }
-                    NhomAdapter.notifyDataSetChanged()
+                    value?.toObjects(Items::class.java)?.let { listRecent.addAll(it) }
+                    ItemsAdapter.notifyDataSetChanged()
                     Utils.setListViewHeightBasedOnChildren(listGanDay)
                 }
             }
     }
 
     private fun attackData() {
-        listGanDay.adapter = NhomAdapter
+        listGanDay.adapter = ItemsAdapter
     }
 
     private fun addView(view: View) {
         listGanDay = view.findViewById(R.id.listGanDay)
     }
-// nhom item
 
     private fun eventHandler() {
         listGanDay.setOnItemClickListener { _, _, i, _ ->
-            NhomVM.setData(listRecent[i])
+            ItemsVM.setData(listRecent[i])
             childFragmentManager.beginTransaction()
-                .replace(R.id.CacNhomView, StorageView())
+                .replace(R.id.CacItemsView, StorageView())
                 .addToBackStack(null)
                 .commit()
         }
