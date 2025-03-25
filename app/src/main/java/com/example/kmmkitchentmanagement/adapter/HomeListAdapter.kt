@@ -16,7 +16,7 @@ class HomeListAdapter(
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> frag_Nhom()
-//            1 -> frag_ThemNhom()
+            1 -> frag_ThemNhom()
 //            2 -> frag_ThongBao()
 //            3 -> frag_TuyChon()
             else -> frag_Nhom()

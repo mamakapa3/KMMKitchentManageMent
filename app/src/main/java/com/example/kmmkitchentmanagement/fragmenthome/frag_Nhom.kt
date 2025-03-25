@@ -4,29 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.kmmkitchentmanagement.AppUtils.Utils
 import com.example.kmmkitchentmanagement.Model.Nhom
-import com.example.kmmkitchentmanagement.Model.NguoiDung
 import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.adapter.NhomAdapter
-import com.example.kmmkitchentmanagement.adapter.ClickableItemsAdapter
-import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
-import com.example.kmmkitchentmanagement.fragmentSub.NhomView
 import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 
 class frag_Nhom : Fragment() {
     private lateinit var firestore: FirebaseFirestore

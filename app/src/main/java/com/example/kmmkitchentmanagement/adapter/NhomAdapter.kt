@@ -67,7 +67,6 @@ class NhomAdapter(private val context: Context, private var list: MutableList<Nh
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
             .into(imageNDLV)
-
         return view
     }
 }

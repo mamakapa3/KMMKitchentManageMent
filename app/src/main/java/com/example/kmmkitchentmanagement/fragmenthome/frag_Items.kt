@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.kmmkitchentmanagement.AppUtils.Utils
 import com.example.kmmkitchentmanagement.Model.Items
+import com.example.kmmkitchentmanagement.Model.Nhom
 import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.adapter.ItemsAdapter
 import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
@@ -26,7 +27,7 @@ class frag_Items : Fragment() {
     private lateinit var ItemsAdapter: ItemsAdapter
     private var listRecent: MutableList<Items> = mutableListOf()
     private lateinit var userViewModel: UserViewModel
-    private val ItemsVM: ItemsVM by viewModels()
+    private val ItemsVM: ItemsVM by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +55,7 @@ class frag_Items : Fragment() {
 
     private fun dataHandler() {
         ItemsAdapter = ItemsAdapter(requireContext(), listRecent)
-        firestore.collection("/Items")
-            .orderBy("addTime", Query.Direction.DESCENDING)
-            .limit(5)
+        firestore.collection("Nhom")
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Toast.makeText(requireActivity(), "Lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show()
@@ -71,17 +70,21 @@ class frag_Items : Fragment() {
 
     private fun attackData() {
         listItems.adapter = ItemsAdapter
+        Log.d("frag_Items", "Adapter set with ${listRecent.size} items")
     }
 
     private fun addView(view: View) {
         listItems = view.findViewById(R.id.listItems)
+        Log.d("frag_Items", "listItems initialized: $listItems")
     }
 
     private fun eventHandler() {
         listItems.setOnItemClickListener { _, _, i, _ ->
             ItemsVM.setData(listRecent[i])
             childFragmentManager.beginTransaction()
-                .replace(R.id.CacItemsView, ItemsView())
+                .replace(R.id.CacItemsView,
+                    ItemsView()
+                )
                 .addToBackStack(null)
                 .commit()
         }

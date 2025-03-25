@@ -1,18 +1,18 @@
 package com.example.kmmkitchentmanagement.viewmodelExtends
 
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kmmkitchentmanagement.Model.Items
 
 class ItemsVM : ViewModel() {
-    private val data: MutableLiveData<Items> = MutableLiveData()
+    private val data = MutableLiveData<Items>()
 
-    fun getData(): MutableLiveData<Items> {
-        return data
+    fun setData(item: Items) {
+        data.value = item
     }
 
-    fun setData(items: Items) {
-        data.value = items
-    }
+    fun getData(): LiveData<Items> = data
 }

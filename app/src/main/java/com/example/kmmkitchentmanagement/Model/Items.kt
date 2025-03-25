@@ -9,7 +9,6 @@ data class Items(
     var number: Int = 0,
     var description: String = "",
     var addTime: Date = Date(),
-//    var publishedDate: Date = Date(),
     var supplier: String = "",
     var itemType: String = "",
 ) : Serializable {

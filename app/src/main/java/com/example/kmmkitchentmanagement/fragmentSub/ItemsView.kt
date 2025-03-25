@@ -12,14 +12,15 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.viewModels
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.kmmkitchentmanagement.Model.Items
 import com.example.kmmkitchentmanagement.R
-//import com.example.kmmkitchentmanagement.fragment_themND.ChinhItems
 import com.example.kmmkitchentmanagement.viewmodelExtends.ItemsVM
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -27,21 +28,19 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class ItemsView : Fragment() {
+    private lateinit var firestore: FirebaseFirestore
     private lateinit var storageReference: StorageReference
     private lateinit var backBtn: ImageButton
-    //    private lateinit var btnLuu: Button
-//    private lateinit var btnEdit: Button
-//    private lateinit var btnXoa: Button
-//    private lateinit var btnXemSau: Button
+    private lateinit var increaseBtn: ImageButton
+    private lateinit var decreaseBtn: ImageButton
     private lateinit var title: TextView
-    private lateinit var dateAdd: TextView
+    private lateinit var addTime: TextView
     private lateinit var itemType: TextView
-    //    private lateinit var tacGia: TextView
-    private lateinit var datePush: TextView
-    private lateinit var moTa: TextView
+    private lateinit var number: TextView
+    private lateinit var description: TextView
     private lateinit var supplier: TextView
     private lateinit var imageView: ImageView
-    private val ItemsVM: ItemsVM by viewModels()
+    private val ItemsVM: ItemsVM by activityViewModels()
     private var Items: Items = Items()
 
     override fun onCreateView(
@@ -58,9 +57,6 @@ class ItemsView : Fragment() {
         addView(view)
         eventHandler()
         attachData()
-//        themDanhDau()
-//        edit()
-//        dialogDelete()
     }
 
     private fun dataHandler() {
@@ -82,13 +78,12 @@ class ItemsView : Fragment() {
     }
     //    Hiển thị thông tin (Items) trên giao diện.
     private fun attachData() {
-//        btnXemSau.text = if (Items.marked) "Xóa khỏi danh sách xem sau" else "Lưu vào danh sách xem sau"
         title.text = Items.title
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        dateAdd.text = dateFormat.format(Items.addTime)
+        addTime.text = dateFormat.format(Items.addTime)
         itemType.text = Items.itemType
-//        tacGia.text = tacGiaClass.name
-        moTa.text = Items.description
+        number.text = Items.number.toString()
+        description.text = Items.description
         supplier.text = Items.supplier
         Glide.with(requireContext())
             .load(storageReference.child("/${Items.id}.jpg"))
@@ -99,90 +94,49 @@ class ItemsView : Fragment() {
     }
 
     private fun addView(view: View) {
-//        btnXemSau = view.findViewById(R.id.xemsau)
-        backBtn = view.findViewById(R.id.btnbacklvviewi)
-//        btnLuu = view.findViewById(R.id.btnsaveLVview)
-//        btnEdit = view.findViewById(R.id.btnSuaLVview)
-//        btnXoa = view.findViewById(R.id.btnDeleteLVview)
-        title = view.findViewById(R.id.textTenLVviewi)
-        dateAdd = view.findViewById(R.id.textngayupLVviewi)
-        itemType = view.findViewById(R.id.textitemTypeLVviewi)
-//        tacGia = view.findViewById(R.id.texttacgiaLVview)
-        moTa = view.findViewById(R.id.textmotaLVviewi)
-        supplier = view.findViewById(R.id.texttrichdanLVviewi)
-        imageView = view.findViewById(R.id.imageLVviewi)
+        backBtn = view.findViewById(R.id.btnbackview)
+        title = view.findViewById(R.id.textTenItemsview)
+        number = view.findViewById(R.id.textNumberview)
+        itemType = view.findViewById(R.id.textitemTypeview)
+        addTime = view.findViewById(R.id.textaddTimeview)
+        description = view.findViewById(R.id.textdescriptionview)
+        supplier = view.findViewById(R.id.textsupplierview)
+        imageView = view.findViewById(R.id.imageview)
+        increaseBtn = view.findViewById(R.id.increaseBtn)
+        decreaseBtn = view.findViewById(R.id.decreaseBtn)
     }
 
+    private fun updateNumber(newNumber: Int) {
+        val firestore = FirebaseFirestore.getInstance().collection("Nhom").document(Items.id)
+
+        firestore.update("number", newNumber)
+            .addOnSuccessListener {
+                Log.d("Debug", "Cập nhật số lượng thành công: $newNumber")
+                Items.number = newNumber // Cập nhật vào biến local
+                number.text = newNumber.toString() // Cập nhật UI
+            }
+            .addOnFailureListener { e ->
+                Log.e("Debug", "Lỗi khi cập nhật số lượng", e)
+                Toast.makeText(requireContext(), "Lỗi khi cập nhật số lượng", Toast.LENGTH_SHORT).show()
+            }
+    }
+    
     private fun eventHandler() {
         backBtn.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-        // btn xem sau
-//        btnXemSau.setOnClickListener {
-//            val state = !Items.isMarked
-//            Items.isMarked = state
-//            btnXemSau.text = if (state) "Xóa khỏi danh sách xem sau" else "Lưu vào danh sách xem sau"
-//            FirebaseFirestore.getInstance().collection("/items")
-//                .document(Items.id)
-//                .update("marked", state)
-//        }
+        // Xử lý nút tăng số lượng
+        increaseBtn.setOnClickListener {
+            updateNumber(Items.number + 1)
+        }
+
+        // Xử lý nút giảm số lượng (chỉ giảm khi number > 0)
+        decreaseBtn.setOnClickListener {
+            if (Items.number > 0) {
+                updateNumber(Items.number - 1)
+            } else {
+                Toast.makeText(requireContext(), "Không thể giảm số lượng dưới 0", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
-
-//    private fun themDanhDau() {
-//        btnLuu.setOnClickListener {
-//            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-//                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1023)
-//            } else {
-//                FirebaseStorage.getInstance().getReference("/items/document/${Items.id}.docx")
-//                    .downloadUrl
-//                    .addOnSuccessListener { uri ->
-//                        downloadFile(requireContext(), Items.title, ".docx", Environment.DIRECTORY_DOWNLOADS, uri)
-//                    }
-//                    .addOnFailureListener {
-//                        AlertDialog.Builder(requireActivity())
-//                            .setTitle("Lỗi tải xuống")
-//                            .setMessage("Lưu trữ số của luận văn này không tồn tại trên hệ thống")
-//                            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-//                            .setIcon(R.drawable.error)
-//                            .show()
-//                    }
-//            }
-//        }
-//    }
-
-//    private fun downloadFile(context: Context, fileName: String, fileExtension: String, destinationDirectory: String, uri: Uri) {
-//        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-//        val request = DownloadManager.Request(uri)
-//            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-//            .setDestinationInExternalPublicDir(destinationDirectory, "$fileName$fileExtension")
-//        downloadManager.enqueue(request)
-//    }
-
-//    chinh sua
-//    private fun edit() {
-//        btnEdit.setOnClickListener {
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.itemsview, ChinhItems())
-//                .addToBackStack("ToItemss")
-//                .commit()
-//        }
-//    }
-
-//    private fun dialogDelete() {
-//        btnXoa.setOnClickListener {
-//            AlertDialog.Builder(requireContext())
-//                .setTitle("Thông báo")
-//                .setMessage("Bạn thật sự muốn xóa luận văn này?")
-//                .setNegativeButton("Hủy") { dialog, _ -> dialog.dismiss() }
-//                .setPositiveButton("OK") { _, _ ->
-//                    val history = historyObj(Date(), "Xóa 1 luận văn '${Items.title}'")
-//                    FirebaseFirestore.getInstance().collection("/lichsu").add(history)
-//                    FirebaseFirestore.getInstance().collection("/items")
-//                        .document(Items.id)
-//                        .delete()
-//                    parentFragmentManager.popBackStack()
-//                }
-//                .show()
-//        }
-//    }
 }
