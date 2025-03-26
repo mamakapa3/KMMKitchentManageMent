@@ -1,12 +1,14 @@
 package com.example.kmmkitchentmanagement.fragmenthome
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.kmmkitchentmanagement.AppUtils.Utils
@@ -24,7 +26,7 @@ class frag_Nhom : Fragment() {
     private lateinit var NhomAdapter: NhomAdapter
     private var listRecent: MutableList<Nhom> = mutableListOf()
     private lateinit var userViewModel: UserViewModel
-    private val NhomVM: NhomVM by viewModels()
+    private val NhomVM: NhomVM by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +47,7 @@ class frag_Nhom : Fragment() {
         dataHandler()
         attackData()
         eventHandler()
+        Log.d("frag_Nhom", "🔥 Activity của frag_Nhom: ${requireActivity()}")
     }
 
     private fun firebaseInit() {
@@ -55,13 +58,13 @@ class frag_Nhom : Fragment() {
         NhomAdapter = NhomAdapter(requireContext(), listRecent)
         firestore.collection("/Nhom")
             .orderBy("addTime", Query.Direction.DESCENDING)
-            .limit(5)
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Toast.makeText(requireActivity(), "Lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show()
                 } else {
                     listRecent.clear()
                     value?.toObjects(Nhom::class.java)?.let { listRecent.addAll(it) }
+                    Log.d("frag_Nhom", "📜 listRecent có ${listRecent.size} nhóm!") // Kiểm tra danh sách nhóm
                     NhomAdapter.notifyDataSetChanged()
                     Utils.setListViewHeightBasedOnChildren(listGanDay)
                 }
@@ -79,11 +82,17 @@ class frag_Nhom : Fragment() {
 
     private fun eventHandler() {
         listGanDay.setOnItemClickListener { _, _, i, _ ->
-            NhomVM.setData(listRecent[i])
-            childFragmentManager.beginTransaction()
-                .replace(R.id.CacNhomView, frag_Items())
-                .addToBackStack(null)
-                .commit()
+            val selectedNhom = listRecent[i]
+            Log.d("frag_Nhom", "📌 Cập nhật nhóm vào ViewModel: ${selectedNhom.id}")
+            NhomVM.setData(selectedNhom) // Cập nhật ViewModel
+
+            parentFragmentManager.beginTransaction().run {
+                replace(R.id.CacNhomView, frag_Items())
+                addToBackStack(null)
+                commit()
+            }
         }
     }
+
+
 }

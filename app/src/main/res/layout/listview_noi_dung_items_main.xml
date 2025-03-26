@@ -18,7 +18,7 @@
         tools:ignore="MissingConstraints,UselessParent">
 
         <ImageView
-            android:id="@+id/imageNDLV"
+            android:id="@+id/imageItems"
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:padding="5dp"

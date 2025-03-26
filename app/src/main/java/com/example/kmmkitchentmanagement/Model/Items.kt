@@ -26,5 +26,4 @@ data class Items(
         }
     """.trimIndent()
     }
-
 }

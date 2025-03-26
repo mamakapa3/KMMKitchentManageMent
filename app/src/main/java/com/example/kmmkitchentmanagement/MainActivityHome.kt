@@ -32,6 +32,7 @@ class MainActivityHome : AppCompatActivity(), LogoutListener {
     private lateinit var emailGet: String
     private lateinit var userViewModel: UserViewModel
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_home)

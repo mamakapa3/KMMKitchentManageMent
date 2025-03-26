@@ -1,0 +1,233 @@
+package com.example.kmmkitchentmanagement.fragmenthome
+
+
+import android.Manifest
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.example.kmmkitchentmanagement.AppUtils.Utils
+import com.example.kmmkitchentmanagement.AppUtils.serviceModule.ImageSave
+import com.example.kmmkitchentmanagement.Model.Items
+import com.example.kmmkitchentmanagement.Model.Nhom
+import com.example.kmmkitchentmanagement.R
+import com.example.kmmkitchentmanagement.customdialog.UploadTaskDialog
+import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
+import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
+import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.UploadTask
+import java.util.Date
+
+class frag_ThemItems : Fragment(){
+    private lateinit var collectionReference: CollectionReference
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var themBtn: Button
+    private lateinit var mImageButton:ImageButton
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private var Thumbnail: Uri? = null
+    private var generatedID: String = ""
+    private lateinit var backBtn: ImageButton
+    private lateinit var editTenItems: EditText
+    private lateinit var editNumber: EditText
+    private lateinit var editSupplier: EditText
+    private lateinit var editDescription: EditText
+    private lateinit var editItemsType: EditText
+
+    private val NhomVM: NhomVM by activityViewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_themitems, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        addView(view)
+        firebaseInit()
+        AddImage(view)
+        ActivityResult(view)
+        eventHandler()
+        addItems(view)
+    }
+
+    private fun firebaseInit() {
+        firestore = FirebaseFirestore.getInstance()
+
+        // ✅ Lắng nghe dữ liệu từ ViewModel và chỉ khởi tạo collectionReference khi có dữ liệu
+        NhomVM.getData().observe(viewLifecycleOwner) { selectedNhom ->
+            if (selectedNhom != null) {
+                collectionReference = firestore.collection("Nhom")
+                    .document(selectedNhom.id)
+                    .collection("Items")
+
+                // 🛑 Chỉ tạo ID sau khi `collectionReference` đã được khởi tạo
+                generatedID = collectionReference!!.document().id
+
+                Log.d("frag_ThemItems", "📡 Đang lưu vào nhóm: ${selectedNhom.id}, Generated ID: $generatedID")
+            } else {
+                Log.e("frag_ThemItems", "⚠ Không có nhóm nào được chọn!")
+            }
+        }
+    }
+    private fun addView(view: View) {
+        mImageButton = view.findViewById(R.id.btnAvaTen)
+        backBtn = view.findViewById(R.id.btnbackview)
+        themBtn = view.findViewById(R.id.btnAddItems)
+        Log.d("frag_ThemItems", "✅ themBtn được tìm thấy: ${themBtn != null}")
+        editTenItems = view.findViewById(R.id.editTenItems)
+        editNumber = view.findViewById(R.id.editNumber)
+        editSupplier = view.findViewById(R.id.editSupplier)
+        editDescription = view.findViewById(R.id.editDescription)
+        editItemsType = view.findViewById(R.id.editItemsType)
+    }
+    fun AddImage(view: View) {
+        mImageButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            activityResultLauncher.launch(intent)
+        }
+    }
+
+    private fun setupImagePicker(view: View) {
+        mImageButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "image/*"
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            activityResultLauncher.launch(intent)
+        }
+    }
+    private fun checkPermissions(context: Context) {
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+        val isGranted = ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        Log.d("PermissionCheck", "Quyền đọc ảnh: $isGranted")
+
+        if (!isGranted) {
+            requestPermissions(arrayOf(permission), 1001)
+        }
+    }
+
+
+    fun ActivityResult(view: View) {
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val data = result.data
+            data?.data?.let { uri ->
+                Log.d("ActivityResult", "URI nhận được: $uri")
+                Thumbnail = uri
+                mImageButton.setImageURI(Thumbnail)
+
+                // Lưu ảnh vào bộ nhớ
+                val imageSave = ImageSave()
+                val savedPath = imageSave.saveImageToLocalStorage(requireContext(), uri, "items_${generatedID}")
+
+                if (savedPath != null) {
+                    Log.d("ImageSave", "Image saved at: $savedPath")
+                } else {
+                    Log.e("ImageSave", "Lưu ảnh thất bại!")
+                }
+            }
+        }
+    }
+
+    private fun addItems(view: View) {
+        themBtn.setOnClickListener {
+            val tieuDe = editTenItems.text.toString().trim()
+            val loai = editItemsType.text.toString().trim()
+            val soLuong = editNumber.text.toString().trim().toIntOrNull() ?: 0
+            val nguonGoc = editSupplier.text.toString().trim()
+            val moTa = editDescription.text.toString().trim()
+
+            // ✅ Kiểm tra dữ liệu đầu vào
+            if (tieuDe.isEmpty()) {
+                Toast.makeText(requireContext(), "❌ Vui lòng nhập tên", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener  // 🔥 Thêm @setOnClickListener để dừng lệnh
+            }
+            if (loai.isEmpty()) {
+                Toast.makeText(requireContext(), "❌ Vui lòng nhập loai", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener  // 🔥 Thêm @setOnClickListener để dừng lệnh
+            }
+
+            if (soLuong <= 0) {
+                Toast.makeText(requireContext(), "❌ Vui lòng nhập số lượng hợp lệ", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (nguonGoc.isEmpty()) {
+                Toast.makeText(requireContext(), "❌ Vui lòng nhập nguồn gốc", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (moTa.isEmpty()) {
+                Toast.makeText(requireContext(), "❌ Vui lòng nhập mô tả", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
+            val tempItems = Items().apply {
+                id = generatedID
+                itemType = loai
+                title = tieuDe
+                number = soLuong
+                supplier = nguonGoc
+                description = moTa
+                addTime = Date()
+            }
+
+            Log.i("frag_ThemItems", "📝 Lưu dữ liệu: $tempItems")
+            collectionReference.document(generatedID).set(tempItems)
+                .addOnSuccessListener {
+                    AlertDialog.Builder(view.context)
+                        .setIcon(R.drawable.check)
+                        .setMessage("Thêm items mới thành công")
+                        .setPositiveButton("Ok") { dialogInterface, _ -> dialogInterface.dismiss() }
+                        .show()
+
+                    // 🔥 Reset form
+                    generatedID = collectionReference.document().id
+                    Thumbnail = null
+                    mImageButton.setImageResource(android.R.drawable.ic_menu_add)
+                    editTenItems.setText("")
+                    editNumber.setText("")
+                    editSupplier.setText("")
+                    editDescription.setText("")
+                    editItemsType.setText("")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Firestore", "❌ Lỗi khi thêm items: ${e.message}")
+                    Toast.makeText(requireContext(), "❌ Thêm items thất bại!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+        }
+    }
+    private fun eventHandler() {
+        backBtn.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+    }
+}

@@ -48,7 +48,7 @@
                     android:textSize="25dp" />
 
                 <EditText
-                    android:id="@+id/editTitleLV"
+                    android:id="@+id/editTenNhom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -68,7 +68,7 @@
                     android:textSize="24dp" />
 
                 <ImageButton
-                    android:id="@+id/btnAvaLV"
+                    android:id="@+id/btnAvaNhom"
                     android:layout_width="80dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
@@ -76,8 +76,6 @@
                     android:scaleType="fitCenter"
                     android:src="@android:drawable/ic_menu_add"
                     tools:ignore="SpeakableTextPresentCheck" />
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -107,7 +105,7 @@
             </LinearLayout>
 
                 <Button
-                    android:id="@+id/btnAddLV"
+                    android:id="@+id/btnAddNhom"
                     android:layout_width="300dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"

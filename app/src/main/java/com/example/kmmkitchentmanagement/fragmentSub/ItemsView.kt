@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -31,8 +32,8 @@ class ItemsView : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storageReference: StorageReference
     private lateinit var backBtn: ImageButton
-    private lateinit var increaseBtn: ImageButton
-    private lateinit var decreaseBtn: ImageButton
+    private lateinit var increaseBtn: Button
+    private lateinit var decreaseBtn: Button
     private lateinit var title: TextView
     private lateinit var addTime: TextView
     private lateinit var itemType: TextView
