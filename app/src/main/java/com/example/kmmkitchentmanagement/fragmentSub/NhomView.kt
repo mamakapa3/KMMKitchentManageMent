@@ -29,7 +29,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ItemsView : Fragment() {
+class NhomView : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var backBtn: ImageButton
     private lateinit var increaseBtn: Button
@@ -49,7 +49,7 @@ class ItemsView : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_cacitems, container, false)
+        return inflater.inflate(R.layout.fragment_chitietnhom, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -146,7 +146,7 @@ class ItemsView : Fragment() {
                 Toast.makeText(requireContext(), "Lỗi khi cập nhật số lượng", Toast.LENGTH_SHORT).show()
             }
     }
-    
+
     private fun eventHandler() {
         backBtn.setOnClickListener {
             parentFragmentManager.popBackStack()

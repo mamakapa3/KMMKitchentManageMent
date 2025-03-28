@@ -35,6 +35,7 @@ class frag_Items : Fragment() {
     private val ItemsVM: ItemsVM by activityViewModels()
     private lateinit var backBtn: ImageButton
     private lateinit var btnAddItem: ImageView
+    private lateinit var btnNhomDetails: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
