@@ -16,13 +16,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.kmmkitchentmanagement.Model.Items
+import com.example.kmmkitchentmanagement.Model.Nhom
 import com.example.kmmkitchentmanagement.R
-import com.example.kmmkitchentmanagement.viewmodelExtends.ItemsVM
+
 import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
+import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 
@@ -32,18 +34,12 @@ import java.util.Locale
 class NhomView : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var backBtn: ImageButton
-    private lateinit var increaseBtn: Button
-    private lateinit var decreaseBtn: Button
+    private lateinit var btnJoin: Button
     private lateinit var title: TextView
-    private lateinit var addTime: TextView
-    private lateinit var itemType: TextView
-    private lateinit var number: TextView
-    private lateinit var description: TextView
-    private lateinit var supplier: TextView
+    private lateinit var memNumber: TextView
     private lateinit var imageView: ImageView
-    private val ItemsVM: ItemsVM by activityViewModels()
-    private var Items: Items = Items()
     private val NhomVM: NhomVM by activityViewModels()
+    private var Nhom: Nhom = Nhom()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,13 +60,13 @@ class NhomView : Fragment() {
     private fun dataHandler() {
         Log.d("Debug", "dataHandler() ĐÃ ĐƯỢC GỌI")
 
-        ItemsVM.getData().observe(viewLifecycleOwner) { items: Items? ->
-            Log.d("Debug", "ViewModel cập nhật dữ liệu: $items")
-            if (items != null) {
-                Items = items
+        NhomVM.getData().observe(viewLifecycleOwner) { nhom: Nhom? ->
+            Log.d("Debug", "ViewModel cập nhật dữ liệu: $nhom")
+            if (nhom != null) {
+                Nhom = nhom
                 attachData()  // 🛠 Gọi lại UI khi có dữ liệu mới
             } else {
-                Log.e("Debug", "Items vẫn NULL")
+                Log.e("Debug", "Nhom vẫn NULL")
             }
         }
     }
@@ -80,19 +76,14 @@ class NhomView : Fragment() {
             firestore = FirebaseFirestore.getInstance() // 🔹 Khởi tạo Firestore
         }
     }
-    //    Hiển thị thông tin (Items) trên giao diện.
+    //    Hiển thị thông tin (Nhom) trên giao diện.
     private fun attachData() {
-        title.text = Items.title
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        addTime.text = dateFormat.format(Items.addTime)
-        itemType.text = Items.itemType
-        number.text = Items.number.toString()
-        description.text = Items.description
-        supplier.text = Items.supplier
+        title.text = Nhom.title
+        memNumber.text = Nhom.memNumb.toString()
 // 🔹 Load Image from Local Storage
         val imagePath = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            "YourAppImages/items_${Items.id}.jpg"
+            "YourAppImages/nhom_${Nhom.id}.jpg"
         )
 
         if (imagePath.exists()) {
@@ -111,57 +102,54 @@ class NhomView : Fragment() {
 
     private fun addView(view: View) {
         backBtn = view.findViewById(R.id.btnbackview)
-        title = view.findViewById(R.id.textTenItemsview)
-        number = view.findViewById(R.id.textNumberview)
-        itemType = view.findViewById(R.id.textitemTypeview)
-        addTime = view.findViewById(R.id.textaddTimeview)
-        description = view.findViewById(R.id.textdescriptionview)
-        supplier = view.findViewById(R.id.textsupplierview)
+        btnJoin = view.findViewById(R.id.btnJoin)
+        title = view.findViewById(R.id.textTenNhomview)
+        memNumber = view.findViewById(R.id.textMemNumb)
         imageView = view.findViewById(R.id.imageview)
-        increaseBtn = view.findViewById(R.id.increaseBtn)
-        decreaseBtn = view.findViewById(R.id.decreaseBtn)
-    }
-
-    private fun updateNumber(newNumber: Int) {
-        val selectedNhom = NhomVM.getData().value // Lấy nhóm hiện tại từ ViewModel
-
-        if (selectedNhom == null) {
-            Log.e("Debug", "⚠ Không có nhóm nào được chọn, không thể cập nhật số lượng!")
-            return
-        }
-
-        val firestoreRef = firestore.collection("Nhom")
-            .document(selectedNhom.id)
-            .collection("Items")
-            .document(Items.id)  // 🔹 Đúng đường dẫn Firestore
-
-        firestoreRef.update("number", newNumber)
-            .addOnSuccessListener {
-                Log.d("Debug", "✅ Cập nhật số lượng thành công: $newNumber")
-                Items.number = newNumber // Cập nhật vào biến local
-                number.text = newNumber.toString() // Cập nhật UI
-            }
-            .addOnFailureListener { e ->
-                Log.e("Debug", "❌ Lỗi khi cập nhật số lượng", e)
-                Toast.makeText(requireContext(), "Lỗi khi cập nhật số lượng", Toast.LENGTH_SHORT).show()
-            }
     }
 
     private fun eventHandler() {
         backBtn.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-        // Xử lý nút tăng số lượng
-        increaseBtn.setOnClickListener {
-            updateNumber(Items.number + 1)
-        }
+        btnJoin.setOnClickListener {
+            val userId = ViewModelProvider(requireActivity())[UserViewModel::class.java].getUser().value?.userId
 
-        // Xử lý nút giảm số lượng (chỉ giảm khi number > 0)
-        decreaseBtn.setOnClickListener {
-            if (Items.number > 0) {
-                updateNumber(Items.number - 1)
-            } else {
-                Toast.makeText(requireContext(), "Không thể giảm số lượng dưới 0", Toast.LENGTH_SHORT).show()
+            if (userId.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), "Không tìm thấy thông tin người dùng!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val nhomRef = firestore.collection("Nhom").document(Nhom.id)
+            nhomRef.get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    Log.d("Firestore", "🔥 Dữ liệu nhóm: ${document.data}")
+                    val members = document.get("members") as? MutableList<String> ?: mutableListOf()
+                    Log.d("Firestore", "📌 Danh sách thành viên: $members") // Debug danh sách thành viên
+                    if (!members.contains(userId)) {
+                        members.add(userId)
+                        val newMemNumb = members.size // 🔹 Cập nhật số lượng thành viên
+
+                        nhomRef.update(mapOf(
+                            "members" to members,
+                            "memNumb" to newMemNumb
+                        ))
+                            .addOnSuccessListener {
+                                Log.d("Firestore", "✅ Người dùng đã tham gia nhóm!")
+                                Toast.makeText(requireContext(), "Bạn đã tham gia nhóm!", Toast.LENGTH_SHORT).show()
+                                memNumber.text = newMemNumb.toString() // Cập nhật UI
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Firestore", "❌ Lỗi khi cập nhật nhóm: ${e.message}")
+                                Toast.makeText(requireContext(), "Lỗi khi tham gia nhóm!", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Toast.makeText(requireContext(), "Bạn đã tham gia nhóm này rồi!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }.addOnFailureListener { e ->
+                Log.e("Firestore", "❌ Không lấy được nhóm: ${e.message}")
+                Toast.makeText(requireContext(), "Lỗi khi lấy thông tin nhóm!", Toast.LENGTH_SHORT).show()
             }
         }
     }

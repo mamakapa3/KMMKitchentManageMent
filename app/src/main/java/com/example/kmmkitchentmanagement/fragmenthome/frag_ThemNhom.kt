@@ -35,6 +35,7 @@ class frag_ThemNhom : Fragment(){
     private lateinit var collectionReference: CollectionReference
     private lateinit var firestore: FirebaseFirestore
     private lateinit var themBtn: Button
+    private lateinit var backBtn: ImageButton
     private lateinit var mImageButton:ImageButton
     private lateinit var mEditTen: EditText
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
@@ -55,6 +56,7 @@ class frag_ThemNhom : Fragment(){
         AddImage(view)
         ActivityResult(view)
         addNhom(view)
+
         generatedID = collectionReference.document().id
     }
     private fun firebaseInit() {
@@ -65,6 +67,10 @@ class frag_ThemNhom : Fragment(){
         mImageButton = view.findViewById(R.id.btnAvaNhom)
         mEditTen = view.findViewById(R.id.editTenNhom)
         themBtn = view.findViewById(R.id.btnAddNhom)
+        backBtn = view.findViewById(R.id.btnbackview)
+        backBtn.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
     }
     fun AddImage(view: View) {
         mImageButton.setOnClickListener {

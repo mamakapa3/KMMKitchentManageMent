@@ -36,8 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SigninActivity" />
         <activity android:name=".MainActivityHome" android:exported="true" />
-<!--        <activity android:name=".fragment_setting.Infomation" />-->
+        <activity android:name=".fragment_setting.Infomation"/>
     </application>
 
 </manifest>

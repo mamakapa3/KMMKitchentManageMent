@@ -13,9 +13,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,9 +49,10 @@ class frag_ThemItems : Fragment(){
     private lateinit var backBtn: ImageButton
     private lateinit var editTenItems: EditText
     private lateinit var editNumber: EditText
-    private lateinit var editSupplier: EditText
     private lateinit var editDescription: EditText
-    private lateinit var editItemsType: EditText
+
+    private lateinit var spinnerItemsType: Spinner
+    private lateinit var spinnerSupplier: Spinner
 
     private val NhomVM: NhomVM by activityViewModels()
 
@@ -67,6 +70,26 @@ class frag_ThemItems : Fragment(){
         ActivityResult(view)
         eventHandler()
         addItems(view)
+
+        spinnerItemsType = view.findViewById(R.id.spinnerItemsType)
+        spinnerSupplier = view.findViewById(R.id.spinnerSupplier)
+
+        val itemsTypeList = listOf("Thịt", "Rau", "Hoa quả", "Dụng cụ", "Gia vị")
+        val supplierList = listOf(
+            "Meat supplier",
+            "Vegetable supplier",
+            "Fruit supplier",
+            "Kitchen Utensils supplier",
+            "Spice Supplier"
+        )
+
+        // Tạo adapter cho spinner
+        val itemsTypeAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, itemsTypeList)
+        val supplierAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, supplierList)
+
+        // Gán adapter vào spinner
+        spinnerItemsType.adapter = itemsTypeAdapter
+        spinnerSupplier.adapter = supplierAdapter
     }
 
     private fun firebaseInit() {
@@ -95,9 +118,8 @@ class frag_ThemItems : Fragment(){
         Log.d("frag_ThemItems", "✅ themBtn được tìm thấy: ${themBtn != null}")
         editTenItems = view.findViewById(R.id.editTenItems)
         editNumber = view.findViewById(R.id.editNumber)
-        editSupplier = view.findViewById(R.id.editSupplier)
         editDescription = view.findViewById(R.id.editDescription)
-        editItemsType = view.findViewById(R.id.editItemsType)
+
     }
     fun AddImage(view: View) {
         mImageButton.setOnClickListener {
@@ -158,10 +180,10 @@ class frag_ThemItems : Fragment(){
     private fun addItems(view: View) {
         themBtn.setOnClickListener {
             val tieuDe = editTenItems.text.toString().trim()
-            val loai = editItemsType.text.toString().trim()
             val soLuong = editNumber.text.toString().trim().toIntOrNull() ?: 0
-            val nguonGoc = editSupplier.text.toString().trim()
             val moTa = editDescription.text.toString().trim()
+            val loai = spinnerItemsType.selectedItem.toString()
+            val nguonGoc = spinnerSupplier.selectedItem.toString()
 
             // ✅ Kiểm tra dữ liệu đầu vào
             if (tieuDe.isEmpty()) {
@@ -214,9 +236,7 @@ class frag_ThemItems : Fragment(){
                     mImageButton.setImageResource(android.R.drawable.ic_menu_add)
                     editTenItems.setText("")
                     editNumber.setText("")
-                    editSupplier.setText("")
                     editDescription.setText("")
-                    editItemsType.setText("")
                 }
                 .addOnFailureListener { e ->
                     Log.e("Firestore", "❌ Lỗi khi thêm items: ${e.message}")

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        tools:ignore="MissingConstraints">
+
+
+        <ImageView
+            android:id="@+id/imageEmail"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginLeft="10dp"
+            android:scaleType="centerCrop"
+            android:padding="5dp"
+            android:src="@drawable/email"
+            app:tint="@color/add_background"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleNotificatoin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="THÔNG BÁO"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="15dp" />
+
+            <TextView
+                android:id="@+id/userNotificatoin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Từ: "
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="15dp" />
+
+            <TextView
+                android:id="@+id/timeNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="12/11/2024"
+                android:textSize="15sp"
+                android:textStyle="italic"
+                android:paddingHorizontal="15dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#7C7C7C">
+
+    </View>
+</LinearLayout>

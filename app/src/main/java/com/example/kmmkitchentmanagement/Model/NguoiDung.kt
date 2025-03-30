@@ -5,8 +5,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class NguoiDung(
-    var name: String? = null,
-    var email: String? = null,
+    var userId: String = "",
+    var name: String = "",
+    var email: String = "",
     var role: Int = -1
 ) : Parcelable {
 
@@ -20,10 +21,10 @@ data class NguoiDung(
     }
 
     fun isFullVar(): Boolean {
-        return !name.isNullOrEmpty() && !email.isNullOrEmpty() && getRole() != "Không xác định"
+        return name.isNotBlank() && email.isNotBlank() && role in listOf(1510, 1, 2)
     }
 
     override fun toString(): String {
-        return "NguoiDung(name='$name', email='$email', role=$role)"
+        return "NguoiDung(userId='$userId', name='$name', email='$email', role=$role)"
     }
 }

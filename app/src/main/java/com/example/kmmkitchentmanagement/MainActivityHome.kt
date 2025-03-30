@@ -65,8 +65,8 @@ class MainActivityHome : AppCompatActivity(), LogoutListener {
                     tab.setIcon(R.drawable.authors)
                 }
                 1 -> {
-                    tab.text = "Thêm nhóm"
-                    tab.setIcon(R.drawable.add_author)
+                    tab.text = "Nhà cung cấp"
+                    tab.setIcon(R.drawable.parcel)
                 }
                 2 -> {
                     tab.text = "Thông báo"

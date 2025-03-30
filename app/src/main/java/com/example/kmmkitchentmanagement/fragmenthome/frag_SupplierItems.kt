@@ -17,21 +17,23 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.kmmkitchentmanagement.AppUtils.Utils
 import com.example.kmmkitchentmanagement.Model.Items
 import com.example.kmmkitchentmanagement.Model.Nhom
+import com.example.kmmkitchentmanagement.Model.Supplier
 import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.adapter.ItemsAdapter
 import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
 import com.example.kmmkitchentmanagement.viewmodelExtends.ItemsVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
+import com.example.kmmkitchentmanagement.viewmodelExtends.SupplierVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-class frag_Items : Fragment() {
+class frag_SupplierItems : Fragment() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var listItems: ListView
     private lateinit var ItemsAdapter: ItemsAdapter
     private var listRecent: MutableList<Items> = mutableListOf()
     private lateinit var userViewModel: UserViewModel
-    private val NhomVM: NhomVM by activityViewModels()
+    private val SupplierVM: SupplierVM by activityViewModels()
     private val ItemsVM: ItemsVM by activityViewModels()
     private lateinit var backBtn: ImageButton
     private lateinit var btnAddItem: ImageView
@@ -56,12 +58,16 @@ class frag_Items : Fragment() {
         // ✅ Đảm bảo ItemsAdapter được khởi tạo trước khi sử dụng
         ItemsAdapter = ItemsAdapter(requireContext(), listRecent)
         listItems.adapter = ItemsAdapter
-        NhomVM.getData().observe(viewLifecycleOwner) { selectedNhom ->
-            if (selectedNhom != null) {
-                Log.d("frag_Items", "📡 Nhận được nhóm từ ViewModel: ${selectedNhom.id}")
-                dataHandler(selectedNhom)
+        SupplierVM.getData().observe(viewLifecycleOwner) { selectedSupplier ->
+            if (selectedSupplier != null) {
+                Log.d("frag_Items", "📡 Nhận được Supplier từ ViewModel: ${selectedSupplier.id}")
+                if (selectedSupplier.id.isNotEmpty()) {
+                    dataHandler(selectedSupplier)
+                } else {
+                    Log.e("frag_Items", "⚠ Supplier ID rỗng, không thể lấy dữ liệu!")
+                }
             } else {
-                Log.e("frag_Items", "⚠ Không có nhóm nào được chọn!")
+                Log.e("frag_Items", "⚠ Không có Supplier nào được chọn!")
             }
         }
         attackData()
@@ -74,21 +80,29 @@ class frag_Items : Fragment() {
         firestore = FirebaseFirestore.getInstance()
     }
 
-    private fun dataHandler(selectedNhom: Nhom) {
+    private fun dataHandler(selectedSupplier: Supplier) {
         ItemsAdapter = ItemsAdapter(requireContext(), listRecent)
 
-        firestore.collection("Nhom").document(selectedNhom.id).collection("Items")
+        firestore.collection("Supplier").document(selectedSupplier.id).collection("Items")
             .addSnapshotListener { value, error ->
                 if (error != null) {
+                    Log.e("frag_Items", "🔥 Lỗi Firestore: ${error.message}")
                     Toast.makeText(requireActivity(), "Lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show()
                 } else {
                     listRecent.clear()
-                    value?.toObjects(Items::class.java)?.let { listRecent.addAll(it) }
+                    val items = value?.toObjects(Items::class.java)
+                    if (items != null) {
+                        listRecent.addAll(items)
+                        Log.d("frag_Items", "📜 Tải thành công ${items.size} items từ Firestore!")
+                    } else {
+                        Log.w("frag_Items", "⚠ Không có dữ liệu!")
+                    }
                     ItemsAdapter.notifyDataSetChanged()
                     Utils.setListViewHeightBasedOnChildren(listItems)
                 }
             }
     }
+
 
 
 

@@ -1,6 +1,5 @@
 package com.example.kmmkitchentmanagement.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.os.Environment
 import android.util.Log
@@ -14,16 +13,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.kmmkitchentmanagement.Model.Nhom
+import com.example.kmmkitchentmanagement.Model.Supplier
 import com.example.kmmkitchentmanagement.R
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
-class NhomAdapter(private val context: Context, private var list: MutableList<Nhom>) : BaseAdapter(), Filterable {
-    private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
-    private var reflectList: MutableList<Nhom> = ArrayList(list)
+
+class SupplierAdapter(private val context: Context, private var list: MutableList<Supplier>) : BaseAdapter(), Filterable {
+    private var reflectList: MutableList<Supplier> = ArrayList(list)
 
     override fun getCount(): Int = list.size
     override fun getItem(i: Int): Any = list[i]
@@ -31,13 +28,13 @@ class NhomAdapter(private val context: Context, private var list: MutableList<Nh
 
     private val filter: Filter = object : Filter() {
         override fun performFiltering(charSequence: CharSequence?): FilterResults {
-            val result = mutableListOf<Nhom>()
+            val result = mutableListOf<Supplier>()
             if (charSequence.isNullOrEmpty()) {
                 result.addAll(reflectList)
             } else {
-                reflectList.forEach { nhom ->
-                    if (nhom.title.trim().lowercase(Locale.getDefault()).contains(charSequence.toString().trim().lowercase(Locale.getDefault()))) {
-                        result.add(nhom)
+                reflectList.forEach { supplier ->
+                    if (supplier.name.trim().lowercase(Locale.getDefault()).contains(charSequence.toString().trim().lowercase(Locale.getDefault()))) {
+                        result.add(supplier)
                     }
                 }
             }
@@ -47,7 +44,7 @@ class NhomAdapter(private val context: Context, private var list: MutableList<Nh
         @Suppress("UNCHECKED_CAST")
         override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults) {
             list.clear()
-            (filterResults.values as? MutableList<Nhom>)?.let {
+            (filterResults.values as? MutableList<Supplier>)?.let {
                 list.addAll(it)
             }
             notifyDataSetChanged()
@@ -57,18 +54,27 @@ class NhomAdapter(private val context: Context, private var list: MutableList<Nh
     override fun getFilter(): Filter = filter
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.listview_noi_dung_nhom_main, parent, false)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.listview_noi_dung_supplier, parent, false)
 
-        val textLVtieude: TextView = view.findViewById(R.id.textLVtieude)
-        val imageNhom: ImageView = view.findViewById(R.id.imageNhom)
-
-        val nhom = list[position]
-        textLVtieude.text = nhom.title
+        val SupplierName: TextView = view.findViewById(R.id.textSupplierName)
+        val imageSupplier: ImageView = view.findViewById(R.id.imageSupplier)
+        val SupplierLocation :TextView = view.findViewById(R.id.txtLocation)
+        val SupplierItemsType:TextView = view.findViewById(R.id.txtItemsType)
+        val SupplierStatus:TextView = view.findViewById(R.id.txtStatus)
+        val supplier = list[position]
+        SupplierName.text = supplier.name
+        SupplierLocation.text = supplier.location
+        SupplierItemsType.text = supplier.itemType
+        if(supplier.status == true){
+            SupplierStatus.text ="Còn hàng"
+        }else {
+            SupplierStatus.text ="Hết Hàng"
+        }
 
         // 📂 Đường dẫn ảnh của nhóm
         val imagePath = File(
             context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            "YourAppImages/nhom_${nhom.id}.jpg"
+            "YourAppImages/supplier_${supplier.id}.jpg"
         )
 
         // 🛠 Kiểm tra xem file có tồn tại không
@@ -78,19 +84,13 @@ class NhomAdapter(private val context: Context, private var list: MutableList<Nh
             Log.e("ImageCheck", "❌ Ảnh KHÔNG tồn tại: ${imagePath.absolutePath}")
         }
 
-        val activity = context as? Activity
-        if (activity == null || activity.isDestroyed) {
-            return view // Không load ảnh nếu Activity đã bị hủy
-        }
-
         // 🖼 Load ảnh bằng Glide (nếu có thì load, không thì dùng ảnh mặc định)
         Glide.with(context)
             .load(if (imagePath.exists()) imagePath else R.drawable.fail_image)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)  // Không dùng cache để load ảnh mới nhất
             .skipMemoryCache(true)
-            .into(imageNhom)
-
-        return view  // 🔹 **Thêm dòng này để tránh lỗi**
+            .into(imageSupplier)
+        return view
     }
 
 }

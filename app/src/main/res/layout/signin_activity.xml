@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    tools:context=".MainActivity">
+    tools:context=".SigninActivity">
 
     <TextView
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Đăng nhập"
+        android:text="Đăng Ký"
         android:textSize="50sp"
         android:fontFamily="sans-serif"
         android:textStyle="bold"
@@ -43,7 +42,6 @@
         android:layout_marginEnd="50dp"
         android:layout_marginTop="-50dp"
         android:maxLength="50"/>
-
     <LinearLayout
         android:id="@+id/password_container"
         android:layout_width="0dp"
@@ -66,7 +64,6 @@
             android:padding="16dp"
             android:gravity="center_vertical"
             android:background="@android:color/transparent"
-            android:inputType="textPassword"
             android:maxLength="20"/>
 
         <ImageButton
@@ -81,25 +78,49 @@
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/errorLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email hoặc mật khẩu không chính xác!"
+    <LinearLayout
+        android:id="@+id/confirm_password_container"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginTop="200dp"
-        android:textColor="#FF0000"/>
+        app:layout_constraintTop_toBottomOf="@+id/username_or_email"
+        android:background="@drawable/rounded_edittext"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="100dp">
+
+        <EditText
+            android:id="@+id/confirmpassword"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Xác nhận Mật khẩu"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:maxLength="20"/>
+
+        <ImageButton
+            android:id="@+id/toggle_password_visibility1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_visibility_on"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+    </LinearLayout>
+
+
 
     <Button
-        android:id="@+id/btnDangNhap"
+        android:id="@+id/btnDangKy"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:text="Đăng nhập"
-        tools:ignore="MissingConstraints"
+        android:text="Đăng ký"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,17 +128,17 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="75dp"
         android:layout_marginEnd="75dp"
-        android:layout_marginTop="300dp" />
+        android:layout_marginTop="400dp" />
 
     <TextView
-        android:id="@+id/LinkGetPassword"
+        android:id="@+id/BackToLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="500dp"
         android:layout_marginEnd="50dp"
         android:clickable="true"
-        android:text="Quên mật khẩu?"
+        android:text="Đã có tài khoản đăng nhập"
         android:textColor="#0000FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -125,23 +146,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TouchTargetSizeCheck" />
-    <TextView
-        android:id="@+id/GoToSignin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="450dp"
-        android:layout_marginEnd="50dp"
-        android:clickable="true"
-        android:text="Chưa có tài khoản Đăng Ký?"
-        android:textColor="#0000FF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TouchTargetSizeCheck" />
-
 
     <TextView
         android:id="@+id/textView19"

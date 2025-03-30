@@ -35,10 +35,20 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:layout_weight="1"
-            android:text="Các Items"
+            android:text="Chi tiết Nhóm"
             android:textColor="#BD8321"
             android:textSize="30sp"
             android:textStyle="bold|italic" />
+
+        <ImageButton
+            android:id="@+id/btnNhomDetails"
+            android:layout_gravity="center"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/edit"
+            app:tint="#000000"/>
     </LinearLayout>
     <ScrollView
         android:layout_width="0dp"
@@ -85,9 +95,12 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/add__1_"
+        app:tint="@color/tab_icon_tint"
+        android:background="@drawable/circle_bg"
+        android:padding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        android:layout_margin="10dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

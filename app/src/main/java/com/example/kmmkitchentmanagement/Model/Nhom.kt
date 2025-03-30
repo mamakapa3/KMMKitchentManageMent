@@ -7,6 +7,8 @@ data class Nhom(
     var id: String = "",
     var title: String = "Not null",
     var addTime: Date = Date(),
+    var memNumb: Int = 0,
+    var members: List<String> = listOf()
 ) : Serializable {
 
     override fun toString(): String {
@@ -15,8 +17,9 @@ data class Nhom(
             id: $id
             title: $title
             addTime: $addTime
+            memNumb: $memNumb
+            members: $members
         }
     """.trimIndent()
     }
-
 }

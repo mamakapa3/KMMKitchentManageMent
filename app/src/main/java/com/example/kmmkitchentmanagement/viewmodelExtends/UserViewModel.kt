@@ -30,10 +30,12 @@ class UserViewModel : ViewModel() {
                     val querySnapshot = task.result
                     if (querySnapshot != null && !querySnapshot.isEmpty) {
                         for (document: QueryDocumentSnapshot in querySnapshot) {
+                            val userId = document.id  // 🔹 Lấy ID từ Firestore
                             val name = document.getString("name") ?: ""
                             val email = document.getString("email") ?: ""
                             val role = document.getLong("role")?.toInt() ?: 0
-                            userLiveData.value = NguoiDung(name, email, role)
+
+                            userLiveData.value = NguoiDung(userId, name, email, role)
                         }
                     } else {
                         Log.d("UserViewModel", "No user data found")
@@ -45,4 +47,5 @@ class UserViewModel : ViewModel() {
                 }
             }
     }
+
 }

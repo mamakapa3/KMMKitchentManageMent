@@ -2,13 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/CacNhomView"
+    android:id="@+id/CacItemsView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#ffffff"
-    tools:context=".fragmenthome.frag_Nhom">
-
+    tools:context=".fragmenthome.frag_Items">
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
@@ -19,6 +18,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageButton
+            android:id="@+id/btnbackview"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/angle_small_left"
+            app:tint="#000000"
+            tools:ignore="SpeakableTextPresentCheck" />
+
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="0dp"
@@ -26,13 +35,21 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:layout_weight="1"
-            android:text="Nhóm của tôi"
+            android:text="Các nhóm"
             android:textColor="#BD8321"
             android:textSize="40sp"
             android:textStyle="bold|italic" />
 
+        <ImageButton
+            android:id="@+id/btnNhomDetails"
+            android:layout_gravity="center"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/edit"
+            app:tint="#000000"/>
     </LinearLayout>
-
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -70,33 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ffffff"></ListView>
+
         </LinearLayout>
     </ScrollView>
-    <ImageView
-        android:id="@+id/btnJoinNhom"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/add_author"
-        app:tint="@color/tab_icon_tint"
-        android:background="@drawable/circle_bg"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@id/btnAddNhom"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="10dp"/>
-
-    <ImageView
-        android:id="@+id/btnAddNhom"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/add__1_"
-        app:tint="@color/tab_icon_tint"
-        android:background="@drawable/circle_bg"
-        android:padding="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="10dp"/>
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
