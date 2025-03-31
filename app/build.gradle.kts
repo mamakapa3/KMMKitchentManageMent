@@ -42,7 +42,8 @@ android {
 }
 
 dependencies {
-
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.fragment:fragment-ktx:1.8.6")
     implementation(libs.glide)
     implementation(libs.firebase.auth)

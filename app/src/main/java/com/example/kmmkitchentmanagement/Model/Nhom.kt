@@ -8,7 +8,8 @@ data class Nhom(
     var title: String = "Not null",
     var addTime: Date = Date(),
     var memNumb: Int = 0,
-    var members: List<String> = listOf()
+    var members: MutableList<String> = mutableListOf(),
+    var creatorId: String = ""
 ) : Serializable {
 
     override fun toString(): String {

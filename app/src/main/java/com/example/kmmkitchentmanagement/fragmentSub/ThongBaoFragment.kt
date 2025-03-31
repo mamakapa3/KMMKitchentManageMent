@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +13,7 @@ import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.adapter.ThongBaoAdapter
 import com.google.firebase.firestore.*
 
-class frag_ThongBao : Fragment() {
+class ThongBaoFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var thongBaoAdapter: ThongBaoAdapter
     private val thongBaoList = mutableListOf<String>()
@@ -27,12 +28,14 @@ class frag_ThongBao : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         recyclerView = view.findViewById(R.id.recyclerViewThongBao)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         thongBaoAdapter = ThongBaoAdapter(thongBaoList)
         recyclerView.adapter = thongBaoAdapter
 
         firestore = FirebaseFirestore.getInstance()
+
         listenForChanges()
     }
 
@@ -40,53 +43,30 @@ class frag_ThongBao : Fragment() {
         firestore.collection("Items")
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
-                    Log.e("Firestore", "Lỗi khi lắng nghe thay đổi", e)
+                    Log.e("Firestore", "❌ Lỗi khi lắng nghe thay đổi", e)
                     return@addSnapshotListener
                 }
 
                 for (dc in snapshots!!.documentChanges) {
                     when (dc.type) {
                         DocumentChange.Type.ADDED -> {
-                            val message = "📌 Thêm items mới: ${dc.document.getString("title")}"
+                            val message = "📌 Thêm mới: ${dc.document.getString("title")}"
                             thongBaoList.add(0, message)
                         }
                         DocumentChange.Type.MODIFIED -> {
-                            val message = "✏️ Items cập nhật: ${dc.document.getString("title")}"
+                            val message = "✏️ Cập nhật: ${dc.document.getString("title")}"
                             thongBaoList.add(0, message)
                         }
                         DocumentChange.Type.REMOVED -> {
-                            val message = "🗑 Xóa items: ${dc.document.getString("title")}"
+                            val message = "🗑 Xóa: ${dc.document.getString("title")}"
                             thongBaoList.add(0, message)
                         }
                     }
                 }
-                thongBaoAdapter.notifyDataSetChanged()
-            }
-        firestore.collection("Nhom")
-            .addSnapshotListener { snapshots, e ->
-                if (e != null) {
-                    Log.e("Firestore", "Lỗi khi lắng nghe thay đổi trong Nhom", e)
-                    return@addSnapshotListener
-                }
 
-                for (dc in snapshots!!.documentChanges) {
-                    when (dc.type) {
-                        DocumentChange.Type.ADDED -> {
-                            val message = "📂 Nhóm mới: ${dc.document.getString("title")}"
-                            thongBaoList.add(0, message)
-                        }
-                        DocumentChange.Type.MODIFIED -> { // 🔥 Thêm trường hợp này
-                            val message = "🔄 Nhóm cập nhật: ${dc.document.getString("title")}"
-                            thongBaoList.add(0, message)
-                        }
-                        DocumentChange.Type.REMOVED -> {
-                            val message = "🚮 Nhóm bị xóa: ${dc.document.getString("title")}"
-                            thongBaoList.add(0, message)
-                        }
-                    }
-                }
+                // Cập nhật giao diện
                 thongBaoAdapter.notifyDataSetChanged()
+                Toast.makeText(requireContext(), "🔔 Dữ liệu đã cập nhật!", Toast.LENGTH_SHORT).show()
             }
-
     }
 }

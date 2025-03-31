@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#ffffff"
-    tools:context=".fragmenthome.frag_Items">
+    tools:context=".fragmenthome.frag_SupplierItems">
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
@@ -35,9 +35,9 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:layout_weight="1"
-            android:text="Các nhóm"
+            android:text="Chi tiết Supplier"
             android:textColor="#BD8321"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:textStyle="bold|italic" />
 
     </LinearLayout>
@@ -74,11 +74,24 @@
             </androidx.cardview.widget.CardView>
 
             <ListView
-                android:id="@+id/listNhom"
+                android:id="@+id/listItems"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ffffff"></ListView>
 
         </LinearLayout>
     </ScrollView>
+    <ImageView
+        android:id="@+id/btnAddItem"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/add__1_"
+        app:tint="@color/tab_icon_tint"
+        android:background="@drawable/circle_bg"
+        android:padding="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="10dp"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

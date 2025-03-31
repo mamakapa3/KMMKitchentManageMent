@@ -52,16 +52,23 @@ class frag_Nhom : Fragment() {
         NhomAdapter = NhomAdapter(requireContext(), listRecent)
         listNhom.adapter = NhomAdapter
 
+
         userViewModel.getUser().observe(viewLifecycleOwner) { user ->
             if (user?.userId != null) { // Lấy userId thay vì email
                 Log.d("frag_Nhom", "📡 Nhận được userId: ${user.userId}")
                 dataHandler(user.userId) // Gọi dataHandler với userId
+
+                // Kiểm tra quyền hạn của người dùng
+                if (user.getRole() == "Quản trị viên") {
+                    btnAddNhom.visibility = View.VISIBLE // Hiển thị nút thêm nhóm
+                } else {
+                    btnAddNhom.visibility = View.GONE // Ẩn nút thêm nhóm
+                }
             } else {
                 Log.e("frag_Nhom", "⚠ Không thể xác định userId!")
                 Toast.makeText(requireActivity(), "Không thể xác định userId", Toast.LENGTH_SHORT).show()
             }
         }
-
         eventHandler()
     }
 
@@ -128,6 +135,4 @@ class frag_Nhom : Fragment() {
                 .commit()
         }
     }
-
-
 }

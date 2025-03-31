@@ -92,5 +92,4 @@ class NhomAdapter(private val context: Context, private var list: MutableList<Nh
 
         return view  // 🔹 **Thêm dòng này để tránh lỗi**
     }
-
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KMM</string>
     <string name="t_y_ch_n_menu">Tùy chọn menu</string>
-
+    <string name="select_supplier">Chọn nhà cung cấp</string>
     <!-- Error messages -->
     <string name="error_fragment_message">An error occurred</string>
     <string name="dismiss_error">Dismiss</string>

@@ -11,6 +11,8 @@ data class Items(
     var addTime: Date = Date(),
     var supplier: String = "",
     var itemType: String = "",
+    var nhomId: String? = null, // 🔥 Thêm trường này
+    var supplierId: String? = null // 🔥 Thêm trường này
 ) : Serializable {
 
     override fun toString(): String {
@@ -23,6 +25,8 @@ data class Items(
             addTime: $addTime
             supplier: $supplier
             itemType: $itemType
+            nhomId: $nhomId
+            supplierId: $supplierId
         }
     """.trimIndent()
     }

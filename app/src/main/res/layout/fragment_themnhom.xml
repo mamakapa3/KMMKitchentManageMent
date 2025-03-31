@@ -72,7 +72,11 @@
                             android:layout_height="wrap_content"
                             android:textSize="16sp"/>
                     </com.google.android.material.textfield.TextInputLayout>
-
+                    <Spinner
+                        android:id="@+id/spinnerSupplier"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:prompt="@string/select_supplier"/>
                     <!-- Chọn ảnh -->
                     <TextView
                         android:layout_width="match_parent"

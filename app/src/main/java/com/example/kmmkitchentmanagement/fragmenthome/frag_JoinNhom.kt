@@ -16,6 +16,7 @@ import com.example.kmmkitchentmanagement.AppUtils.Utils
 import com.example.kmmkitchentmanagement.Model.Nhom
 import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.adapter.NhomAdapter
+import com.example.kmmkitchentmanagement.fragmentSub.JoinNhomView
 import com.example.kmmkitchentmanagement.fragmentSub.NhomView
 import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
@@ -93,7 +94,7 @@ class frag_JoinNhom : Fragment() {
             NhomVM.setData(selectedNhom) // Cập nhật ViewModel
 
             parentFragmentManager.beginTransaction().run {
-                replace(R.id.CacNhomView, NhomView())
+                replace(R.id.CacNhomView, JoinNhomView())
                 addToBackStack(null)
                 commit()
             }

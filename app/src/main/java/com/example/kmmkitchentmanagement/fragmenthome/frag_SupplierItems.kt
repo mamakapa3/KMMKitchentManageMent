@@ -37,7 +37,6 @@ class frag_SupplierItems : Fragment() {
     private val ItemsVM: ItemsVM by activityViewModels()
     private lateinit var backBtn: ImageButton
     private lateinit var btnAddItem: ImageView
-    private lateinit var btnNhomDetails: ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +47,7 @@ class frag_SupplierItems : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_items, container, false)
+        return inflater.inflate(R.layout.fragment_supplier_items, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +69,21 @@ class frag_SupplierItems : Fragment() {
                 Log.e("frag_Items", "⚠ Không có Supplier nào được chọn!")
             }
         }
-        attackData()
+        userViewModel.getUser().observe(viewLifecycleOwner) { user ->
+            if (user?.userId != null) { // Kiểm tra userId
+                Log.d("frag_Items", "📡 Nhận được userId: ${user.userId}")
+
+                // Kiểm tra vai trò người dùng
+                if (user.getRole() == "Quản trị viên") {
+                    btnAddItem.visibility = View.VISIBLE // Hiển thị nút thêm nhóm
+                } else {
+                    btnAddItem.visibility = View.GONE // Ẩn nút thêm nhóm
+                }
+            } else {
+                Log.e("frag_Items", "⚠ Không thể xác định userId!")
+                Toast.makeText(requireActivity(), "Không thể xác định userId", Toast.LENGTH_SHORT).show()
+            }
+        }
         eventHandler()
     }
 
@@ -81,22 +94,14 @@ class frag_SupplierItems : Fragment() {
     }
 
     private fun dataHandler(selectedSupplier: Supplier) {
-        ItemsAdapter = ItemsAdapter(requireContext(), listRecent)
-
-        firestore.collection("Supplier").document(selectedSupplier.id).collection("Items")
+        firestore.collection("Items")
+            .whereEqualTo("supplierId", selectedSupplier.id)
             .addSnapshotListener { value, error ->
                 if (error != null) {
-                    Log.e("frag_Items", "🔥 Lỗi Firestore: ${error.message}")
                     Toast.makeText(requireActivity(), "Lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show()
                 } else {
                     listRecent.clear()
-                    val items = value?.toObjects(Items::class.java)
-                    if (items != null) {
-                        listRecent.addAll(items)
-                        Log.d("frag_Items", "📜 Tải thành công ${items.size} items từ Firestore!")
-                    } else {
-                        Log.w("frag_Items", "⚠ Không có dữ liệu!")
-                    }
+                    value?.toObjects(Items::class.java)?.let { listRecent.addAll(it) }
                     ItemsAdapter.notifyDataSetChanged()
                     Utils.setListViewHeightBasedOnChildren(listItems)
                 }
@@ -106,15 +111,11 @@ class frag_SupplierItems : Fragment() {
 
 
 
-    private fun attackData() {
-        listItems.adapter = ItemsAdapter
-        Log.d("frag_Items", "Adapter set with ${listRecent.size} items")
-    }
 
     private fun addView(view: View) {
         listItems = view.findViewById(R.id.listItems)
         backBtn = view.findViewById(R.id.btnbackview)
-        btnAddItem = view.findViewById(R.id.btnAddItem)as ImageView
+        btnAddItem = view.findViewById(R.id.btnAddItem)
     }
 
     private fun eventHandler() {

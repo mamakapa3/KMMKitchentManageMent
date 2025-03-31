@@ -20,6 +20,7 @@ import com.example.kmmkitchentmanagement.Model.Nhom
 import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.adapter.ItemsAdapter
 import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
+import com.example.kmmkitchentmanagement.fragmentSub.NhomView
 import com.example.kmmkitchentmanagement.viewmodelExtends.ItemsVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
@@ -59,12 +60,27 @@ class frag_Items : Fragment() {
         NhomVM.getData().observe(viewLifecycleOwner) { selectedNhom ->
             if (selectedNhom != null) {
                 Log.d("frag_Items", "📡 Nhận được nhóm từ ViewModel: ${selectedNhom.id}")
+
                 dataHandler(selectedNhom)
             } else {
                 Log.e("frag_Items", "⚠ Không có nhóm nào được chọn!")
             }
         }
-        attackData()
+        userViewModel.getUser().observe(viewLifecycleOwner) { user ->
+            if (user?.userId != null) { // Kiểm tra userId
+                Log.d("frag_Items", "📡 Nhận được userId: ${user.userId}")
+
+                // Kiểm tra vai trò người dùng
+                if (user.getRole() == "Quản trị viên") {
+                    btnAddItem.visibility = View.VISIBLE // Hiển thị nút thêm nhóm
+                } else {
+                    btnAddItem.visibility = View.GONE // Ẩn nút thêm nhóm
+                }
+            } else {
+                Log.e("frag_Items", "⚠ Không thể xác định userId!")
+                Toast.makeText(requireActivity(), "Không thể xác định userId", Toast.LENGTH_SHORT).show()
+            }
+        }
         eventHandler()
     }
 
@@ -75,9 +91,8 @@ class frag_Items : Fragment() {
     }
 
     private fun dataHandler(selectedNhom: Nhom) {
-        ItemsAdapter = ItemsAdapter(requireContext(), listRecent)
-
-        firestore.collection("Nhom").document(selectedNhom.id).collection("Items")
+        firestore.collection("Items")
+            .whereEqualTo("nhomId", selectedNhom.id)
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Toast.makeText(requireActivity(), "Lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show()
@@ -91,15 +106,10 @@ class frag_Items : Fragment() {
     }
 
 
-
-    private fun attackData() {
-        listItems.adapter = ItemsAdapter
-        Log.d("frag_Items", "Adapter set with ${listRecent.size} items")
-    }
-
     private fun addView(view: View) {
         listItems = view.findViewById(R.id.listItems)
         backBtn = view.findViewById(R.id.btnbackview)
+        btnNhomDetails = view.findViewById(R.id.btnNhomDetails)
         btnAddItem = view.findViewById(R.id.btnAddItem)as ImageView
     }
 
@@ -109,7 +119,13 @@ class frag_Items : Fragment() {
         }
         btnAddItem.setOnClickListener {
             childFragmentManager.beginTransaction()
-                .replace(R.id.CacItemsView, frag_ThemItems()) // Thay đổi sang frag_ThemItems
+                .replace(R.id.CacItemsView, frag_ThemItems())
+                .addToBackStack(null) // Để có thể quay lại bằng nút back
+                .commit()
+        }
+        btnNhomDetails.setOnClickListener {
+            childFragmentManager.beginTransaction()
+                .replace(R.id.CacItemsView, NhomView())
                 .addToBackStack(null) // Để có thể quay lại bằng nút back
                 .commit()
         }

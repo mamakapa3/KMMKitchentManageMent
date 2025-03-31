@@ -47,7 +47,7 @@
             android:layout_height="40dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            android:src="@drawable/edit"
+            android:src="@drawable/report_8138807"
             app:tint="#000000"/>
     </LinearLayout>
     <ScrollView

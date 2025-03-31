@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         gotosignin = findViewById(R.id.GoToSignin)
 
         passwordEditText.setText("123123asd")
-        usernameOrEmailEditText.setText("khongphaitrongninh@gmail.com")
+        usernameOrEmailEditText.setText("nguyentrongninh2k3@gmail.com")
     }
 
     private fun eventHandler() {

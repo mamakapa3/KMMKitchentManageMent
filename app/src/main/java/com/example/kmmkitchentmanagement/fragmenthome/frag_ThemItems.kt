@@ -32,6 +32,7 @@ import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.customdialog.UploadTaskDialog
 import com.example.kmmkitchentmanagement.fragmentSub.ItemsView
 import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
+import com.example.kmmkitchentmanagement.viewmodelExtends.SupplierVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -55,6 +56,7 @@ class frag_ThemItems : Fragment(){
     private lateinit var spinnerSupplier: Spinner
 
     private val NhomVM: NhomVM by activityViewModels()
+    private val SupplierVM: SupplierVM by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -94,23 +96,19 @@ class frag_ThemItems : Fragment(){
 
     private fun firebaseInit() {
         firestore = FirebaseFirestore.getInstance()
-
-        // ✅ Lắng nghe dữ liệu từ ViewModel và chỉ khởi tạo collectionReference khi có dữ liệu
         NhomVM.getData().observe(viewLifecycleOwner) { selectedNhom ->
-            if (selectedNhom != null) {
-                collectionReference = firestore.collection("Nhom")
-                    .document(selectedNhom.id)
-                    .collection("Items")
-
-                // 🛑 Chỉ tạo ID sau khi `collectionReference` đã được khởi tạo
-                generatedID = collectionReference!!.document().id
-
-                Log.d("frag_ThemItems", "📡 Đang lưu vào nhóm: ${selectedNhom.id}, Generated ID: $generatedID")
-            } else {
-                Log.e("frag_ThemItems", "⚠ Không có nhóm nào được chọn!")
+            SupplierVM.getData().observe(viewLifecycleOwner) { selectedSupplier ->
+                if (selectedNhom != null || selectedSupplier != null) {
+                    collectionReference = firestore.collection("Items")
+                    generatedID = collectionReference.document().id
+                    Log.d("frag_ThemItems", "📡 Đang thêm Items với ID: $generatedID")
+                } else {
+                    Log.e("frag_ThemItems", "⚠ Không có nhóm hoặc nhà cung cấp nào được chọn!")
+                }
             }
         }
     }
+
     private fun addView(view: View) {
         mImageButton = view.findViewById(R.id.btnAvaTen)
         backBtn = view.findViewById(R.id.btnbackview)
@@ -119,7 +117,6 @@ class frag_ThemItems : Fragment(){
         editTenItems = view.findViewById(R.id.editTenItems)
         editNumber = view.findViewById(R.id.editNumber)
         editDescription = view.findViewById(R.id.editDescription)
-
     }
     fun AddImage(view: View) {
         mImageButton.setOnClickListener {
@@ -131,15 +128,6 @@ class frag_ThemItems : Fragment(){
         }
     }
 
-    private fun setupImagePicker(view: View) {
-        mImageButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "image/*"
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-            activityResultLauncher.launch(intent)
-        }
-    }
     private fun checkPermissions(context: Context) {
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
@@ -185,31 +173,10 @@ class frag_ThemItems : Fragment(){
             val loai = spinnerItemsType.selectedItem.toString()
             val nguonGoc = spinnerSupplier.selectedItem.toString()
 
-            // ✅ Kiểm tra dữ liệu đầu vào
-            if (tieuDe.isEmpty()) {
-                Toast.makeText(requireContext(), "❌ Vui lòng nhập tên", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener  // 🔥 Thêm @setOnClickListener để dừng lệnh
-            }
-            if (loai.isEmpty()) {
-                Toast.makeText(requireContext(), "❌ Vui lòng nhập loai", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener  // 🔥 Thêm @setOnClickListener để dừng lệnh
-            }
-
-            if (soLuong <= 0) {
-                Toast.makeText(requireContext(), "❌ Vui lòng nhập số lượng hợp lệ", Toast.LENGTH_SHORT).show()
+            if (tieuDe.isEmpty() || loai.isEmpty() || soLuong <= 0 || nguonGoc.isEmpty() || moTa.isEmpty()) {
+                Toast.makeText(requireContext(), "❌ Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            if (nguonGoc.isEmpty()) {
-                Toast.makeText(requireContext(), "❌ Vui lòng nhập nguồn gốc", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (moTa.isEmpty()) {
-                Toast.makeText(requireContext(), "❌ Vui lòng nhập mô tả", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
 
             val tempItems = Items().apply {
                 id = generatedID
@@ -221,30 +188,28 @@ class frag_ThemItems : Fragment(){
                 addTime = Date()
             }
 
-            Log.i("frag_ThemItems", "📝 Lưu dữ liệu: $tempItems")
+            NhomVM.getData().value?.let { tempItems.nhomId = it.id }
+            SupplierVM.getData().value?.let { tempItems.supplierId = it.id }
+
             collectionReference.document(generatedID).set(tempItems)
                 .addOnSuccessListener {
-                    AlertDialog.Builder(view.context)
-                        .setIcon(R.drawable.check)
-                        .setMessage("Thêm items mới thành công")
-                        .setPositiveButton("Ok") { dialogInterface, _ -> dialogInterface.dismiss() }
-                        .show()
-
-                    // 🔥 Reset form
-                    generatedID = collectionReference.document().id
-                    Thumbnail = null
-                    mImageButton.setImageResource(android.R.drawable.ic_menu_add)
-                    editTenItems.setText("")
-                    editNumber.setText("")
-                    editDescription.setText("")
+                    Toast.makeText(requireContext(), "✅ Thêm items mới thành công", Toast.LENGTH_SHORT).show()
+                    resetForm()
                 }
                 .addOnFailureListener { e ->
                     Log.e("Firestore", "❌ Lỗi khi thêm items: ${e.message}")
-                    Toast.makeText(requireContext(), "❌ Thêm items thất bại!", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(requireContext(), "❌ Thêm items thất bại!", Toast.LENGTH_SHORT).show()
                 }
         }
     }
+    private fun resetForm() {
+        editTenItems.setText("")
+        editNumber.setText("")
+        editDescription.setText("")
+        spinnerItemsType.setSelection(0)
+        spinnerSupplier.setSelection(0)
+    }
+
     private fun eventHandler() {
         backBtn.setOnClickListener {
             parentFragmentManager.popBackStack()

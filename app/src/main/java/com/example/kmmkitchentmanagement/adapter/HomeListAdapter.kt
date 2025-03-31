@@ -17,7 +17,7 @@ class HomeListAdapter(
         return when (position) {
             0 -> frag_Nhom()
             1 -> frag_Supplier()
-//            2 -> frag_ThongBao()
+            2 -> frag_ThongBao()
             3 -> frag_TuyChon()
             else -> frag_Nhom()
         }
