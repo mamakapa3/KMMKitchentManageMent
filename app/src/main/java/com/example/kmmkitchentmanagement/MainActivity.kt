@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity() {
         errorLogin.visibility = View.GONE
         gotosignin = findViewById(R.id.GoToSignin)
 
-        passwordEditText.setText("123123asd")
-        usernameOrEmailEditText.setText("nguyentrongninh2k3@gmail.com")
+//        passwordEditText.setText("123123asd")
+//        usernameOrEmailEditText.setText("nguyentrongninh2k3@gmail.com")
     }
 
     private fun eventHandler() {

@@ -1,10 +1,13 @@
 package com.example.kmmkitchentmanagement.fragmenthome
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +20,7 @@ class frag_ThongBao : Fragment() {
     private lateinit var thongBaoAdapter: ThongBaoAdapter
     private val thongBaoList = mutableListOf<String>()
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var btnClearAll: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +38,31 @@ class frag_ThongBao : Fragment() {
 
         firestore = FirebaseFirestore.getInstance()
         listenForChanges()
+
+        btnClearAll = view.findViewById(R.id.btnClearAll)
+
+        btnClearAll.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Xóa tất cả thông báo")
+                .setMessage("Bạn có chắc muốn xóa toàn bộ thông báo không?")
+                .setPositiveButton("Xóa") { _, _ ->
+                    firestore.collection("ThongBao")
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            val batch = firestore.batch()
+                            for (document in documents) {
+                                batch.delete(document.reference)
+                            }
+                            batch.commit().addOnSuccessListener {
+                                thongBaoList.clear()
+                                thongBaoAdapter.notifyDataSetChanged()
+                                Toast.makeText(requireContext(), "Đã xóa tất cả thông báo!", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                }
+                .setNegativeButton("Hủy", null)
+                .show()
+        }
     }
 
     private fun listenForChanges() {

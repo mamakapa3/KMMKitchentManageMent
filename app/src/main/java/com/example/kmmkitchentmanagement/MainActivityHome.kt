@@ -107,18 +107,6 @@ class MainActivityHome : AppCompatActivity(), LogoutListener {
         connectErrorDialog.show(fragmentManager, "errorConnectDialog")
     }
 
-//    override fun onBackPressed() {
-//        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-//
-//        if (currentFragment is frag_ThemNhom||
-//            currentFragment is frag_TuyChon ||
-//            currentFragment is frag_ThongBao
-//        ) {
-//            mViewPager.currentItem = 0
-//        } else {
-//            super.onBackPressed()
-//        }
-//    }
 
     fun getUserViewModel(): UserViewModel {
         return userViewModel

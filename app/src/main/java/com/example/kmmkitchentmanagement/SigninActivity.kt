@@ -74,7 +74,6 @@ class SigninActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onStart() {
         super.onStart()
         if (!NetworkUtil.isWifiConnected(this)) {

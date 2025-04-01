@@ -30,6 +30,10 @@ class frag_Supplier : Fragment(){
     private val SupplierVM: SupplierVM by activityViewModels()
 //    private lateinit var btnAddNhom: ImageView
 
+    override fun onResume() {
+        super.onResume()
+        SupplierAdapter.notifyDataSetChanged() // Cập nhật dữ liệu trong adapter
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

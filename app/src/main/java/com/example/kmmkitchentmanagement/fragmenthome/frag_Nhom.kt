@@ -31,6 +31,10 @@ class frag_Nhom : Fragment() {
     private lateinit var btnAddNhom: ImageView
     private lateinit var btnJoinNhom: ImageView
 
+    override fun onResume() {
+        super.onResume()
+        NhomAdapter.notifyDataSetChanged() // Cập nhật dữ liệu trong adapter
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

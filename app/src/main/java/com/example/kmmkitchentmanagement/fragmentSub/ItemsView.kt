@@ -25,6 +25,7 @@ import com.example.kmmkitchentmanagement.Model.Items
 import com.example.kmmkitchentmanagement.R
 import com.example.kmmkitchentmanagement.viewmodelExtends.ItemsVM
 import com.example.kmmkitchentmanagement.viewmodelExtends.NhomVM
+import com.example.kmmkitchentmanagement.viewmodelExtends.UserViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 
@@ -58,7 +59,8 @@ class ItemsView : Fragment() {
     private val ItemsVM: ItemsVM by activityViewModels()
     private var Items: Items = Items()
     private val NhomVM: NhomVM by activityViewModels()
-    val role = 2
+    private val userViewModel: UserViewModel by activityViewModels() // Sử dụng ViewModel chung
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -171,81 +173,87 @@ class ItemsView : Fragment() {
             }
     }
     private fun deleteItem() {
-        if (role != 1) {  // 🔥 Nếu không phải Admin, chặn xóa
-            Toast.makeText(requireContext(), "Bạn không có quyền xóa", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val itemRef = firestore.collection("Items").document(Items.id)
-        AlertDialog.Builder(requireContext())
-            .setTitle("Xác nhận xóa")
-            .setMessage("Bạn có chắc chắn muốn xóa mục này không?")
-            .setPositiveButton("Xóa") { _, _ ->
-                itemRef.delete()
-                    .addOnSuccessListener {
-                        Log.d("Debug", "✅ Xóa thành công")
-                        Toast.makeText(requireContext(), "Đã xóa thành công", Toast.LENGTH_SHORT).show()
-                        parentFragmentManager.popBackStack() // Quay lại màn hình trước
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("Debug", "❌ Lỗi khi xóa", e)
-                        Toast.makeText(requireContext(), "Lỗi khi xóa", Toast.LENGTH_SHORT).show()
-                    }
+        userViewModel.getUser().observe(viewLifecycleOwner) { user ->
+            if (user.role != 1) { // 🔥 Kiểm tra đúng role từ ViewModel
+                Toast.makeText(requireContext(), "Bạn không có quyền xóa", Toast.LENGTH_SHORT).show()
+                return@observe
             }
-            .setNegativeButton("Hủy", null)
-            .show()
+
+            val itemRef = firestore.collection("Items").document(Items.id)
+            AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận xóa")
+                .setMessage("Bạn có chắc chắn muốn xóa mục này không?")
+                .setPositiveButton("Xóa") { _, _ ->
+                    itemRef.delete()
+                        .addOnSuccessListener {
+                            Log.d("Debug", "✅ Xóa thành công")
+                            Toast.makeText(requireContext(), "Đã xóa thành công", Toast.LENGTH_SHORT).show()
+                            parentFragmentManager.popBackStack()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("Debug", "❌ Lỗi khi xóa", e)
+                            Toast.makeText(requireContext(), "Lỗi khi xóa", Toast.LENGTH_SHORT).show()
+                        }
+                }
+                .setNegativeButton("Hủy", null)
+                .show()
+        }
     }
+
 
 
     private fun toggleEditMode(editing: Boolean) {
         isEditing = editing
-         // 🔹 Lấy role từ ViewModel hoặc SharedPreferences
 
-        if (editing) {
-            editNumber.setText(number.text) // Người dùng luôn có thể chỉnh sửa số lượng
+        // 🔹 Lấy role từ ViewModel
+        userViewModel.getUser().observe(viewLifecycleOwner) { user ->
+            if (editing) {
+                editNumber.setText(number.text) // Người dùng luôn có thể chỉnh sửa số lượng
 
-            if (role == 1) { // Admin chỉnh sửa tất cả
-                editTitle.setText(title.text)
-                editItemType.setText(itemType.text)
-                editDescription.setText(description.text)
-                editSupplier.setText(supplier.text)
+                if (user.role == 1) { // Admin chỉnh sửa tất cả
+                    editTitle.setText(title.text)
+                    editItemType.setText(itemType.text)
+                    editDescription.setText(description.text)
+                    editSupplier.setText(supplier.text)
 
-                editTitle.visibility = View.VISIBLE
-                editItemType.visibility = View.VISIBLE
-                editDescription.visibility = View.VISIBLE
-                editSupplier.visibility = View.VISIBLE
+                    editTitle.visibility = View.VISIBLE
+                    editItemType.visibility = View.VISIBLE
+                    editDescription.visibility = View.VISIBLE
+                    editSupplier.visibility = View.VISIBLE
 
-                // Ẩn TextView tương ứng
-                title.visibility = View.GONE
-                itemType.visibility = View.GONE
-                description.visibility = View.GONE
-                supplier.visibility = View.GONE
+                    // Ẩn TextView tương ứng
+                    title.visibility = View.GONE
+                    itemType.visibility = View.GONE
+                    description.visibility = View.GONE
+                    supplier.visibility = View.GONE
+                }
+
+                editNumber.visibility = View.VISIBLE
+                number.visibility = View.GONE
+
+                editItemBtn.text = "Lưu"
+                CancelEditItemBtn.text = "Hủy"
+            } else {
+                // 🔹 Khi HỦY, đảm bảo tất cả các TextView đều hiện lại
+                title.visibility = View.VISIBLE
+                number.visibility = View.VISIBLE
+                itemType.visibility = View.VISIBLE
+                description.visibility = View.VISIBLE
+                supplier.visibility = View.VISIBLE
+
+                // Ẩn EditText
+                editTitle.visibility = View.GONE
+                editNumber.visibility = View.GONE
+                editItemType.visibility = View.GONE
+                editDescription.visibility = View.GONE
+                editSupplier.visibility = View.GONE
+
+                editItemBtn.text = "Chỉnh sửa"
+                CancelEditItemBtn.text = "Hủy chỉnh"
             }
-
-            editNumber.visibility = View.VISIBLE
-            number.visibility = View.GONE
-
-            editItemBtn.text = "Lưu"
-            CancelEditItemBtn.text = "Hủy"
-        } else {
-            // 🔹 Khi HỦY, đảm bảo tất cả các TextView đều hiện lại
-            title.visibility = View.VISIBLE
-            number.visibility = View.VISIBLE
-            itemType.visibility = View.VISIBLE
-            description.visibility = View.VISIBLE
-            supplier.visibility = View.VISIBLE
-
-            // Ẩn EditText
-            editTitle.visibility = View.GONE
-            editNumber.visibility = View.GONE
-            editItemType.visibility = View.GONE
-            editDescription.visibility = View.GONE
-            editSupplier.visibility = View.GONE
-
-            editItemBtn.text = "Chỉnh sửa"
-            CancelEditItemBtn.text = "Hủy chỉnh"
         }
     }
+
 
 
     private fun saveChanges() {

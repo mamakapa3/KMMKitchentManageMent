@@ -16,13 +16,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.kmmkitchentmanagement.Model.Nhom
 import com.example.kmmkitchentmanagement.R
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 class NhomAdapter(private val context: Context, private var list: MutableList<Nhom>) : BaseAdapter(), Filterable {
-    private val firebaseStorage: FirebaseStorage = FirebaseStorage.getInstance()
     private var reflectList: MutableList<Nhom> = ArrayList(list)
 
     override fun getCount(): Int = list.size
